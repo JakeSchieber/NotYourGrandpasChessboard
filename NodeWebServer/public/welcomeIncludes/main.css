@@ -1,0 +1,63 @@
+
+.navTitle { 
+	color: #000 !important;
+	font-size: 160%;
+	/*font-family: 'Josefin Sans', sans-serif; */
+	font-family: 'PT Sans Narrow', sans-serif;
+	font-weight: bold;
+}
+.name {
+	color: #000 !important;
+	font-size: 180% !important;
+	font-family: 'PT Sans Narrow', sans-serif;
+	font-weight: bold;
+	text-align: center;
+	margin: 0;
+}
+
+.title {
+	color: #000 !important;
+	font-size: 115% !important;
+	font-family: 'PT Sans', sans-serif;
+	font-weight: bold;
+	text-align: center;
+	margin: 0;
+}
+
+.descrip {
+	color: #000 !important;
+	font-size: 100% !important;
+	font-family: 'PT Serif', serif;
+	text-align: justify;
+	margin: 0;
+}
+.bar {
+	height: 2px;
+	margin: 15px 35%;
+	background-color: #000;
+}
+.glyphRotatePrep {
+	-webkit-transition: -webkit-transform 0.5s ease-in-out;
+       -moz-transition:    -moz-transform 0.5s ease-in-out;
+        -ms-transition:     -ms-transform 0.5s ease-in-out;
+         -o-transition:      -o-transform 0.5s ease-in-out;
+            transition:         transform 0.5s ease-in-out;
+}
+.glyphRotateAction {
+	-webkit-transform: rotate(90deg);
+       -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+         -o-transform: rotate(90deg);
+            transform: rotate(90deg);
+}
+.socialIconGroup {
+	margin-top: 20px;
+	display: block;
+}
+.socialIcon {
+	height: 35px;
+	width: 35px;
+}
+.genInfo {
+	
+}
