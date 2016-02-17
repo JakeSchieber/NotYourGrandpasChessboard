@@ -1,4 +1,5 @@
-angular.module('routes', [])
+angular.module('routes', ['nywton.chessboard'])
+// config the angular app
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 
 	$routeProvider
@@ -14,5 +15,11 @@ angular.module('routes', [])
 		});
 
 	$locationProvider.html5Mode(true);
+}])
 
+// config the chessboard
+.config(['nywtonChessboardConfigProvider', function nywtonChessConfigConfig(chessboardProvider) {
+  chessboardProvider.draggable(true)
+    .position('start')
+    .pieceTheme('libs/chessboard.js/dist/img/chesspieces/wikipedia/{piece}.png');
 }]);
