@@ -1,10 +1,7 @@
-// Ionic Starter App
+/* global StatusBar */
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'nywton.chessboard'])
+// NYGC App
+angular.module('nygc', ['ionic', 'nygc.controllers', 'nywton.chessboard'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -25,54 +22,36 @@ angular.module('starter', ['ionic', 'starter.controllers', 'nywton.chessboard'])
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
-    .state('app', {
-    url: '/app',
-    abstract: true,
-    templateUrl: 'templates/menu.html',
-    controller: 'AppCtrl'
-  })
-
-  .state('app.search', {
-    url: '/search',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/search.html'
-      }
-    }
-  })
-
-  .state('app.browse', {
-      url: '/browse',
+    .state('nygc', {
+      url: '/nygc',
+      abstract: true,
+      templateUrl: 'templates/menu.html',
+      controller: 'AppCtrl'
+    })
+    .state('nygc.home', {
+      url: '/home',
       views: {
         'menuContent': {
-          templateUrl: 'templates/browse.html'
+          templateUrl: 'templates/home.html',
+          controller: 'HomeCtrl'
         }
       }
     })
-    .state('app.playlists', {
-      url: '/playlists',
+    .state('nygc.game', {
+      url: '/game',
       views: {
         'menuContent': {
-          templateUrl: 'templates/playlists.html',
-          controller: 'PlaylistsCtrl'
+          templateUrl: 'templates/game.html',
+          controller: 'GameCtrl'
         }
       }
-    })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
-  });
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/playlists');
+    });
+    
+  // if none of the above states are matched, fallback to home
+  $urlRouterProvider.otherwise('/nygc/home');
 })
 
-// config the chessboard
+// configure the chessboard
 .config(['nywtonChessboardConfigProvider', function nywtonChessConfigConfig(chessboardProvider) {
   chessboardProvider.draggable(true)
     .position('start')

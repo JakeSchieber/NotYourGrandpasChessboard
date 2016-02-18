@@ -1,0 +1,62 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+/* line 13, ../sass/screen.scss */
+.crazyGradMenu ion-header-bar {
+  background-color: #902b68 !important;
+}
+/* line 16, ../sass/screen.scss */
+.crazyGradMenu ion-header-bar h1 {
+  color: #fff !important;
+}
+/* line 20, ../sass/screen.scss */
+.crazyGradMenu ion-content {
+  background: #A83279 !important;
+  /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(#A83279, #D38312) !important;
+  /* For Safari 5.1 to 6.0 */
+  background: linear-gradient(#A83279, #D38312) !important;
+  /* Standard syntax */
+}
+/* line 28, ../sass/screen.scss */
+.crazyGradMenu ion-content div ion-list div ion-item {
+  background: transparent !important;
+  color: white;
+  font-weight: 600;
+}
+/* line 33, ../sass/screen.scss */
+.crazyGradMenu ion-content div ion-list div ion-item a {
+  background: transparent !important;
+}
+/* line 41, ../sass/screen.scss */
+.crazyGradMenu .menuLogo {
+  padding: 20px;
+}
+/* line 44, ../sass/screen.scss */
+.crazyGradMenu .menuLogo img {
+  width: 150px;
+  height: 150px;
+}
+
+/* line 52, ../sass/screen.scss */
+.centerImg, .crazyGradMenu .menuLogo img {
+  display: block;
+  margin: auto;
+}
+
+/* Sets the page title */
+/* line 58, ../sass/screen.scss */
+.title {
+  color: #902b68 !important;
+}
+
+/* line 61, ../sass/screen.scss */
+.menuIcon {
+  color: #902b68 !important;
+}
+
+/* line 64, ../sass/screen.scss */
+.mainBackground {
+  background-color: #A83279;
+}

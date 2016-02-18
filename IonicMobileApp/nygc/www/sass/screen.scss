@@ -1,0 +1,66 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+// @import "compass/reset";
+
+$crazyOrangeGrad1:#A83279; 
+$crazyOrangeGrad2: #D38312;
+$darkenMain: darken($crazyOrangeGrad1, 6);
+
+.crazyGradMenu {
+  ion-header-bar {
+    background-color: $darkenMain !important;
+    
+    h1 {
+      color: #fff !important;
+    }
+  }
+  ion-content {
+    background: #A83279 !important; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#A83279, #D38312) !important; /* For Safari 5.1 to 6.0 */
+    background: linear-gradient(#A83279, #D38312) !important; /* Standard syntax */
+    
+    div {
+      ion-list {
+        div { 
+          ion-item {
+            background: transparent !important;
+            color: white;
+            font-weight: 600;
+            
+            a {
+              background: transparent !important;
+            }
+          }
+        }
+      }
+    }  
+  }
+  .menuLogo {
+    padding: 20px;
+    
+    img{
+      @extend .centerImg;
+      width: 150px;
+      height: 150px;
+    }
+  }
+}
+
+.centerImg {
+  display: block;
+  margin: auto;
+}
+
+/* Sets the page title */
+.title {
+  color: $darkenMain !important;
+}
+.menuIcon {
+  color: $darkenMain !important;
+}
+.mainBackground {
+  background-color: $crazyOrangeGrad1;
+}
