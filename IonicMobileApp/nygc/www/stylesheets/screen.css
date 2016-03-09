@@ -60,3 +60,17 @@
 .mainBackground {
   background-color: #A83279;
 }
+
+/* white square */
+/* line 69, ../sass/screen.scss */
+.white-1e1d7 {
+  background-color: #c53d8f !important;
+  color: #D38312 !important;
+}
+
+/* black square */
+/* line 75, ../sass/screen.scss */
+.black-3c85d {
+  background-color: #ec9822 !important;
+  color: #A83279 !important;
+}

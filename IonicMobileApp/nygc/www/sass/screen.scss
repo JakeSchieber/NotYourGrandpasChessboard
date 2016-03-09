@@ -64,3 +64,15 @@ $darkenMain: darken($crazyOrangeGrad1, 6);
 .mainBackground {
   background-color: $crazyOrangeGrad1;
 }
+
+/* white square */
+.white-1e1d7 {
+    background-color: lighten($crazyOrangeGrad1, 8) !important;
+    color: $crazyOrangeGrad2 !important;
+}
+
+/* black square */
+.black-3c85d {
+    background-color: lighten($crazyOrangeGrad2, 8) !important;
+    color: $crazyOrangeGrad1 !important;
+}

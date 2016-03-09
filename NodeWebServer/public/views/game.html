@@ -1,0 +1,68 @@
+<!--
+<div ng-include="'../partials/header.html'"></div>
+<button class="btn btn-primary" ng-click="pushed()">Push Me</button>
+-->
+
+<div class="container">
+  <div class="row">
+    <div class="jumbotron col-sm-8 col-sm-offset-2">
+      <h2>Testing board connection.</h2>
+      <p>This board is initialized from the server connection. This board should represent a static copy across browsers.</p>
+    </div>
+    
+    <!--
+    <div class="col-sm-6 col-sm-offset-1" style="padding: 10px;">
+      <div class="jumbotron">
+        <h2 style="margin-top: 0;">Main Board</h2>
+        <div id="board1" style="width: 100%;"></div>
+        <br><br>
+        <button class="btn btn-primary" ng-click="pushUpdate()">Push Update</button>
+      </div>
+    </div>
+    
+    <div class="col-sm-4" style="padding: 10px;">
+      <div class="jumbotron">
+        <h2 style="margin-top: 0;">Baby Board</h2>
+        <div id="board2" style="width: 100%;"></div>
+      </div>
+    </div>
+    -->
+  </div>
+  
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2" style="padding: 10px;">
+      <div class="jumbotron">
+        <h2 style="margin: 0 0 20px 0;">NYGChessboard</h2>
+        
+        <div ng-if="!boardInitted" style="margin: 0 0 20px 0;">
+          <h2><span class="label label-black">Loading...</span></h2>
+        </div>
+        
+        <div ng-if="boardInitted" style="margin: 0 0 20px 0;">
+          <h2 ng-if="me == 'w'"><span class="label label-default">Playing as White</span> <span class="label label-black" ng-click="switchSides()">Switch</span></h2>
+          <h2 ng-if="me == 'b'"><span class="label label-default">Playing as Black</span> <span class="label label-black" ng-click="switchSides()">Switch</span></h2>
+        </div>
+        
+        <div style="margin: 0 0 40px 0;">
+          <h2 ng-if="me == placing"><span class="label label-success">Your Turn</span></h2>
+          <h2 ng-if="me != placing"><span class="label label-danger">Waiting For Opponent</span></h2>
+        </div>
+        <div id="board" style="width: 100%;"></div>
+        
+        <h2><span class="label label-danger" ng-click="restartGame()">Restart Game</span></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-5" style="padding: 10px;">
+      <div class="jumbotron">
+        <h2 style="margin-top: 0;">Game Information</h2>
+        <p><b>Playing As:</b> {{me == 'w' ? 'white' : 'black' }} <button class="btn btn-primary" ng-click="switchSides()">Switch Colors</button></p>
+        <p><b>Current Turn:</b> {{placing == 'w' ? 'white' : 'black' }}</p>
+        <p>{{me}}</p>
+        <p>{{placing}}</p>
+      </div>
+    </div>
+  </div>
+</div>

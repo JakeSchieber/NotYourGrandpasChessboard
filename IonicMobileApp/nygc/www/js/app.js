@@ -55,5 +55,5 @@ angular.module('nygc', ['ionic', 'nygc.controllers', 'nywton.chessboard'])
 .config(['nywtonChessboardConfigProvider', function nywtonChessConfigConfig(chessboardProvider) {
   chessboardProvider.draggable(true)
     .position('start')
-    .pieceTheme('libs/chessboard.js/dist/img/chesspieces/wikipedia/{piece}.png');
+    .pieceTheme('lib/chessboard.js/dist/img/chesspieces/wikipedia/{piece}.png');
 }]);

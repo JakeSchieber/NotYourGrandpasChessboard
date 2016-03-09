@@ -5,6 +5,7 @@
 		"bootstrap": "latest",
 		"angular": "latest",
 		"angular-route": "latest"	,
+    "chess.js": "latest",
     "angular-chessboard": "latest"
 	}
 }

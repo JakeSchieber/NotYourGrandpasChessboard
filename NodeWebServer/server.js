@@ -5,9 +5,10 @@ var mongoose       = require('mongoose');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 
+// custom
+var sockets = require('./app/dist/sockets');
+
 // configuration ===========================================
-	
-// config files
 var db = require('./config/db');
 
 var port = process.env.PORT || 8085; // set our port
@@ -22,15 +23,18 @@ app.use(methodOverride('X-HTTP-Method-Override')); // override with the X-HTTP-M
 app.use(express.static(__dirname + '/public')); // set the static files location /public/img will be /img for users
 
 // routes ==================================================
-require('./app/routes')(app); // pass our application into our routes
+require('./app/dist/routes/main')(app); // pass our application into our routes
 
 // start app, enabled with socket.io ===============================================
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+server.listen(port);
 
-http.listen(port);	   // start http server
+// socket.io routes
+// initialize the socket.io connections.
+sockets.socketInit(io);
+
+
 console.log('Magic happens on port ' + port); 			// shoutout to the user
 exports = module.exports = app; 						// expose app
 
-// socket.io routes
-require('./app/sockets')(io); // pass io into socket routes

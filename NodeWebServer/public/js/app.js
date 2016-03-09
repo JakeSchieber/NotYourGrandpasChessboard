@@ -1,1 +1,5 @@
-angular.module('sampleApp', ['ngRoute', 'controllers', 'services', 'routes']);
+angular.module('nygc', ['ngRoute', 'controllers', 'services', 'routes'])
+
+.run(function(Socket) {
+  Socket.init();
+});
