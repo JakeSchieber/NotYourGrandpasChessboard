@@ -208,7 +208,7 @@ angular.module('controllers', [])
    * Note: If this is triggered by a socket then you must place inside $rootsScope.$apply()
    */
   function handleBoardUpdate(gameUpdate) {
-    /*
+    /* More efficient version, handle just a move, but we dont care about efficiency...
     // sets the board and all $scoped variables required by a board Update
     board.position(gameUpdate.boardFen);
     if(gameUpdate.move) {
@@ -217,17 +217,16 @@ angular.module('controllers', [])
       if(!move) {
         alert("Oops, an error occurred. Your move was rejected");
       }
-      $scope.$apply(function() {
-        
-        $scope.placing = gameUpdate.turn;
-        $scope.turnChange();
-      });
     } else {
       console.log("handle board load.");
       game.load(gameUpdate.boardFen);
     }
+    $scope.$apply(function() {
+      $scope.placing = gameUpdate.turn;
+    });
     */
     // sets the board and all $scoped variables required by a board Update
+    // safer bet, cant get off track with board moves.
     board.position(gameUpdate.boardFen);
     // temp hack, just always load in the full board.
     game.load(gameUpdate.boardFen);
