@@ -174,6 +174,8 @@ angular.module('controllers', [])
   };
 
   $scope.boardInitted = false;
+  // request board and then catch it.
+  Socket.emit('boardRequest', { });
   Socket.on("boardInit", function (data) {
 		console.log("Board initialization");
     // console.log(data);

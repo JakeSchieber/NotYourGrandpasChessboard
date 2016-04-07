@@ -25,7 +25,7 @@ export function socketInit(io: SocketIO.Server) {
     console.log("Connection Established.");
     
     // on connection we need to be able to emit the board to the new user.
-    socket.emit('boardInit', getBoardState(userUserChess(userSelectedGame), null));
+    // socket.emit('boardInit', getBoardState(userUserChess(userSelectedGame), null));
     
     // just return a
     socket.on('boardRequest', function() {
