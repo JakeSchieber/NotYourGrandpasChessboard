@@ -1,13 +1,16 @@
 /* global StatusBar */
 
 // NYGC App
-angular.module('nygc', ['ionic', 'nygc.controllers', 'nywton.chessboard'])
+angular.module('nygc', ['ionic', 'nygc.controllers', 'nygc.services'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, Socket) {
   $ionicPlatform.ready(function() {
+    // initialize socket.io
+    Socket.init();
+    
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    if (window.cordova && window.cordova.plugins.Keyboard) {
+    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
 
@@ -50,10 +53,4 @@ angular.module('nygc', ['ionic', 'nygc.controllers', 'nywton.chessboard'])
   // if none of the above states are matched, fallback to home
   $urlRouterProvider.otherwise('/nygc/home');
 })
-
-// configure the chessboard
-.config(['nywtonChessboardConfigProvider', function nywtonChessConfigConfig(chessboardProvider) {
-  chessboardProvider.draggable(true)
-    .position('start')
-    .pieceTheme('lib/chessboard.js/dist/img/chesspieces/wikipedia/{piece}.png');
-}]);
+;

@@ -6,6 +6,9 @@ function socketInit(io) {
         var userSelectedGame = 0;
         console.log("Connection Established.");
         socket.emit('boardInit', getBoardState(userUserChess(userSelectedGame), null));
+        socket.on('boardRequest', function () {
+            socket.emit('boardInit', getBoardState(userUserChess(userSelectedGame), null));
+        });
         socket.on('moveRequest', function (data) {
             console.log("Move request received...");
             var move = userUserChess(userSelectedGame).move(data.move);
