@@ -74,3 +74,46 @@
   background-color: #ec9822 !important;
   color: #A83279 !important;
 }
+
+/* line 80, ../sass/screen.scss */
+.label {
+  border-radius: 4px;
+  font-size: 70%;
+  padding: 5px 9px;
+  color: #fff;
+  background-color: #777;
+}
+
+/* line 87, ../sass/screen.scss */
+.label-black {
+  background-color: #000;
+}
+
+/* line 90, ../sass/screen.scss */
+.label-success {
+  background-color: #5cb85c;
+}
+
+/* line 93, ../sass/screen.scss */
+.label-danger {
+  background-color: #d9534f;
+}
+
+/* line 96, ../sass/screen.scss */
+.waitingSpinner svg {
+  width: 30px;
+  height: 30px;
+  stroke: #444;
+  fill: #444;
+}
+
+/* line 102, ../sass/screen.scss */
+.spinnerCont {
+  padding-top: 15px;
+}
+
+/* line 106, ../sass/screen.scss */
+.wrapMe {
+  overflow: initial !important;
+  white-space: initial !important;
+}

@@ -76,3 +76,34 @@ $darkenMain: darken($crazyOrangeGrad1, 6);
     background-color: lighten($crazyOrangeGrad2, 8) !important;
     color: $crazyOrangeGrad1 !important;
 }
+
+.label {
+  border-radius: 4px;
+  font-size: 70%;
+  padding: 5px 9px;
+  color: #fff;
+  background-color: #777;
+}
+.label-black {
+  background-color: #000;
+}
+.label-success {
+  background-color: #5cb85c;
+}
+.label-danger {
+  background-color: #d9534f;
+}
+.waitingSpinner svg {
+  width: 30px;
+  height: 30px;
+  stroke: #444;
+  fill: #444;
+}
+.spinnerCont {
+  padding-top: 15px;
+}
+
+.wrapMe {
+    overflow: initial !important;
+    white-space: initial !important;
+}

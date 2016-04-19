@@ -14,24 +14,11 @@ angular.module('routes', [])
 			templateUrl: 'views/game.html',
       controller: 'GameCtrl'
 		})
+    .when('/mockboard', {
+			templateUrl: 'views/mockboard.html',
+      controller: 'MockBoardCtrl'
+		})
     // go to index on no match
     .otherwise({ redirectTo: '/' });
-	
 }])
-
-/*
-// $inject: 'nywton.chessboard'
-// config the chessboard
-.config(['nywtonChessboardConfigProvider', function nywtonChessConfigConfig(chessboardProvider) {
-  
-  var hold = chessboardProvider.draggable(true)
-    .position('start')
-    .pieceTheme('libs/chessboard.js/dist/img/chesspieces/wikipedia/{piece}.png');
-  
-  chessboardProvider.onChange = function() {
-    alert();
-  }
-  console.log(chessboardProvider);
-}])
-*/
 ;

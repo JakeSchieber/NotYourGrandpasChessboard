@@ -1,37 +1,21 @@
-angular.module('nygc.controllers', [])
-
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
-
-})
-
-.controller('HomeCtrl', function($scope) {
-
-})
-
-.controller('GameCtrl', function($scope, Socket, $ionicModal) {
-  
-  /**
-   * Use this to poll the api for changes.
-   */
-  /*
-  (function pollForChanges() {
-    // here we nee
-    // how do we want to setup the polls here....
-    
-    $timeout(pollForChanges, 1000);
-  })();
-  */
-  
+angular.module('controllers')
+.controller('GameCtrl', ['$scope', 'Socket', '$rootScope', function($scope, Socket, $rootScope) {
   var board,
   game = new Chess();
   
   $scope.colors = ['w', 'b'];
   $scope.fullColors = ['white', 'black'];
   // on page load default current user to white.
-  $scope.me = $scope.colors[0];
+  $scope.me = $scope.colors[1];
   // placing is initted inside of the handleBoardInit function
   
   $scope.switchSides = function() {
+    /*
+      This restriction has been made so that the board does not have to poll while it attempts to set into starting position.
+    */
+    alert("The ability to play as white has temporarily been restricted to the mockboard. If you would like to make a move as white change the url from /game to /mockboard");
+    //return;
+    
     // swaps orientation and who is moving. Game logic handles controlling which pieces can be moved, no update to game required.
     $scope.me = ($scope.me == $scope.colors[0]) ? $scope.colors[1] : $scope.colors[0];
     board.orientation(($scope.me == $scope.colors[0]) ? $scope.fullColors[0] : $scope.fullColors[1]);
@@ -41,6 +25,21 @@ angular.module('nygc.controllers', [])
     console.log("request issued to restart game.");
     Socket.emit("restartGame", { });
   }
+
+  var removeGreySquares = function() {
+    $('#board .square-55d63').css('background', '');
+  };
+
+  var greySquare = function(square) {
+    var squareEl = $('#board .square-' + square);
+    
+    var background = '#a9a9a9';
+    if (squareEl.hasClass('black-3c85d') === true) {
+      background = '#696969';
+    }
+
+    squareEl.css('background', background);
+  };
 
   var onDragStart = function(source, piece) {
     // If it is not your turn then dont worry about drawing on gray colors.
@@ -64,8 +63,7 @@ angular.module('nygc.controllers', [])
   }
   
   var onDrop = function(source, target) {
-    console.log(source);
-    console.log(target);
+    removeGreySquares();
     
     // see if the move is legal
     var moveRequest = {
@@ -81,26 +79,58 @@ angular.module('nygc.controllers', [])
     Socket.emit("moveRequest", { move: moveRequest });
   };
 
+  var onMouseoverSquare = function(square, piece) {
+    // If it is not your turn then dont worry about drawing on gray colors.
+    if($scope.me != game.turn()) {
+      return;
+    }
+    
+    // get list of possible moves for this square
+    var moves = game.moves({
+      square: square,
+      verbose: true
+    });
+
+    // exit if there are no moves available for this square
+    if (moves.length === 0) return;
+
+    // highlight the square they moused over
+    greySquare(square);
+
+    // highlight the possible squares for this piece
+    for (var i = 0; i < moves.length; i++) {
+      greySquare(moves[i].to);
+    }
+  };
+
+  var onMouseoutSquare = function(square, piece) {
+    removeGreySquares();
+  };
+
   var onSnapEnd = function() {
     board.position(game.fen());
   };
 
   $scope.boardInitted = false;
-  // Send a board initialization request
-  Socket.emit("boardRequest", { });
-  // this will be caught by the initialization function below.
+  // request board and then catch it.
+  // Socket.emit('boardRequest', { });
+  Socket.emit('setToGameDemo', {});
   Socket.on("boardInit", function (data) {
 		console.log("Board initialization");
-        
+    // console.log(data);
+    
     var cfg = {
+      orientation: ($scope.me == $scope.colors[0]) ? $scope.fullColors[0] : $scope.fullColors[1],
       draggable: true,
       onDragStart: onDragStart,
       onDrop: onDrop,
       onChange: onChange,
+      onMouseoutSquare: onMouseoutSquare,
+      onMouseoverSquare: onMouseoverSquare,
       onSnapEnd: onSnapEnd,
-      pieceTheme: 'lib/chessboard.js/dist/img/chesspieces/wikipedia/{piece}.png',
+      pieceTheme: 'libs/chessboard.js/dist/img/chesspieces/wikipedia/{piece}.png',
     };
-    board = ChessBoard('demoboard', cfg);
+    board = ChessBoard('board', cfg);
 
     $scope.boardInitted = true;
     handleBoardUpdate(data);
@@ -112,6 +142,7 @@ angular.module('nygc.controllers', [])
     handleBoardUpdate(data);
   });
   Socket.on("boardUpdate", function (data) {
+    console.log("boardUpdate request received.");
     handleBoardUpdate(data);
 	});
   
@@ -122,7 +153,7 @@ angular.module('nygc.controllers', [])
   function handleBoardUpdate(gameUpdate) {
     /* More efficient version, handle just a move, but we dont care about efficiency...
     // sets the board and all $scoped variables required by a board Update
-    board.position(gameUpdate.boardFen); *
+    board.position(gameUpdate.boardFen);
     if(gameUpdate.move) {
       console.log("handle board move.");
       var move = game.move(gameUpdate.move);
@@ -146,6 +177,4 @@ angular.module('nygc.controllers', [])
       $scope.placing = gameUpdate.turn;
     });
   }
-  
-})
-;
+}]);

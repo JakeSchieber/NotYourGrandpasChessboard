@@ -1,0 +1,19 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header">
+    <h1 class="title">Alert</h1>
+    <!-- <button class="button button-clear button-primary" ng-click="closeModal()">Cancel</button> -->
+  </ion-header-bar>
+  
+  <ion-content>
+    <ul class="list">
+      <li class="item" style="padding-bottom: 15px;">
+        <h2 class="name" style="margin-bottom:12px;">Oops.</h2>
+        <p class="wrapMe" style="margin-bottom:12px;">An error has occurred, please reset the board to the last valid board state (shown below).</p>
+        <p class="wrapMe" style="margin-bottom:12px;">Error: {{errorMessage}}</p>
+      </li>
+    </ul>
+    <div style="padding: 0px 11px 15px 12px;">
+      <div id="gameboard" style="width: 100%"></div>
+    </div>
+  </ion-content>
+</ion-modal-view>

@@ -7,7 +7,8 @@ angular.module('nygc.services', [])
     init: function() {
       // io included as global from socket.io import
       console.log("Initializing socket.");
-      socket = io.connect('http://jacobschieber.com:8085');// io.connect('http://localhost:8085');
+      // socket = io.connect('http://jacobschieber.com:8085');
+      socket = io.connect('http://localhost:8085');
       initted = true;
     },
     initted: function() {

@@ -1,0 +1,33 @@
+<ion-view view-title="Game">
+  <ion-content class="" style="background-color: #eee" scroll="false">
+    
+    <div style="padding: 15px 11px 15px 12px;">
+      <h3>MockBoard Companion</h3>
+      <div ng-if="!mockboardInitted || !gameboardInitted" style="margin: 0 0 20px 0;">
+        <h4><span class="label label-black">Loading...</span></h4>
+      </div>
+      
+      <div ng-if="mockboardInitted && gameboardInitted" style="margin: 0 0 15px 0;">
+        <h2 ng-if="me == placing"><span class="label label-success">Your Turn</span></h2>
+        <h2 ng-if="me != placing"><span class="label label-danger">Waiting For Opponent</span></h2>
+      </div>
+      
+      <div>
+        <h6>Current Moves List</h6>
+        <p ng-if="moveSequenceAr.length > 0"><span class="label label-black" ng-repeat="mov in moveSequenceAr">{{mov}}</span></p>
+        <p ng-if="!moveSequenceAr || moveSequenceAr.length == 0">There are no moves in the current sequence.</p>
+      </div>
+      <!--
+        We are removing the mockboard and replacing it with a moves list...
+        <div id="mockboard" style="width: 100%"></div>
+      -->
+      
+      <!-- 
+        We need a pretty issue resolver on the 
+        -->
+      <h2><span class="label label-danger" ng-click="restartGame()">Restart Game</span></h2>
+    </div>
+    
+  </ion-content>
+  
+</ion-view>

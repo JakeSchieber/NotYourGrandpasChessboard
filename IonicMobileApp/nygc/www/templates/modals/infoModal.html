@@ -1,0 +1,49 @@
+<ion-modal-view style="z-index: 10;">
+  <ion-header-bar class="bar bar-header">
+    <h1 class="title">Welcome!!!</h1>
+  </ion-header-bar>
+  
+  <!--
+    This should sense whether a game is in progress or if you would like to restart a new game.
+  
+    use scoped variable gameInProgress.
+  -->
+  <ion-content>
+    <!-- If no game is in progress then just show the welcome message. -->
+    <div ng-if="!gameInProgress">
+      <ul class="list">
+        <li class="item" style="padding-bottom: 15px;">
+          <h2 class="name" style="margin-bottom:12px;">Welcome to NYGC!</h2>
+          <p class="wrapMe" style="margin-bottom:12px;">This is the companion app to the NYGC autonomous chessboard. This app allows for you to connect your board to the game server and will give you updates regarding your game as it progresses. Make sure to have your app available throughout the entirety of your game!</p>
+          
+          <p class="wrapMe" style="margin-bottom:12px;"><b>Turns:</b> There will be a red/green label at the top of the information screen denoting whose turn it currently is. Only move pieces on the board when "You Turn" is present.</p>
+          
+          <p class="wrapMe" style="margin-bottom:12px;"><b>Invalid Moves:</b> Sometimes players make invalid moves or the board misses a step in your move pattern. If this happens an alert will pop up asking for you to reset the board to the last known board position. When you habe successfully reset the board to this piece layout the error message will go away.</p>
+        </li>
+      </ul>
+      <div style="padding: 15px;">
+        <button class="button button-block button-positive" ng-click="closeInfoModal()">
+          Get started
+        </button>
+      </div>
+    </div>
+    
+    <!-- If a game is in progress-->
+    <div ng-if="gameInProgress">
+      <ul class="list">
+        <li class="item" style="padding-bottom: 15px;">
+          <h2 class="name" style="margin-bottom:12px;">Game in progress</h2>
+          <p class="wrapMe" style="margin-bottom:12px;">A current game is in progress. Would you like to restart the game or continue playing?</p>
+        </li>
+      </ul>
+      <div style="padding: 15px;">
+        <button class="button button-block button-positive" ng-click="closeInfoModal()">
+          Continue Game
+        </button>
+        <button class="button button-block button-assertive" ng-click="infoModalRestartGame()">
+          Restart Game
+        </button>
+      </div>
+    </div>
+  </ion-content>
+</ion-modal-view>

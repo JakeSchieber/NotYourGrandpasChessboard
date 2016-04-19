@@ -48,6 +48,15 @@ angular.module('nygc', ['ionic', 'nygc.controllers', 'nygc.services'])
           controller: 'GameCtrl'
         }
       }
+    })
+    .state('nygc.mockboard', {
+      url: '/mockboard',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/mockboard.html',
+          controller: 'MockBoardCtrl'
+        }
+      }
     });
     
   // if none of the above states are matched, fallback to home

@@ -1,0 +1,48 @@
+<!--
+<div ng-include="'../partials/header.html'"></div>
+<button class="btn btn-primary" ng-click="pushed()">Push Me</button>
+-->
+
+<div class="container">
+  <div class="row">
+    <div class="jumbotron col-sm-8 col-sm-offset-2">
+      <h2>Mock Board.</h2>
+      <p>This board is meant to mock a bluetooth connected device to a phone.</p>
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2" style="padding: 10px;">
+      <div class="jumbotron">
+        <h2 style="margin: 0 0 20px 0;">NYGChessboard</h2>
+        
+        <div ng-if="!boardInitted" style="margin: 0 0 20px 0;">
+          <h2><span class="label label-black">Loading...</span></h2>
+          <p>* NOTE: If the chessboard does not load in 2-3 seconds please refresh this page.</p>
+        </div>
+        
+        <!-- Must be in the dom permanently else cannot be found when Socket init calls -->
+        <div id="board" style="width: 100%; margin: 30px 0;"></div>
+        <div ng-if="boardInitted" style="margin: 0 0 20px 0;">
+          <h2>
+            <span class="label label-black" ng-click="switchSides()">Rotate Board</span> 
+            <span class="label label-danger" ng-click="restartGame()">Reset Board</span>
+          </h2>
+        </div>
+        
+        <hr />
+        <p>* NOTE: Piece tracking on the NYGC is done through a handshaking agreement between the </p>
+        <p>* NOTE: Game logic forces 'queen' promotion of pawns.</p>
+        <!-- We should have a button that allows for promotion to be seen as a Queen or as a pawn.
+          (to simulate what the real board will look like.) -->
+          
+          <!-- We should add a game mode where the user is forced to remove the piece which they are taking 
+          from the board before they can place a new piece on the board there. -->
+         
+          <!--
+            Moves will be validated on the server, but the logic on polling for a move ought to be on the app's responsibility.'
+            -->
+      </div>
+    </div>
+  </div>
+</div>
