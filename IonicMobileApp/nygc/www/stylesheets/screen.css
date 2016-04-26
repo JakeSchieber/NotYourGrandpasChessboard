@@ -117,3 +117,13 @@
   overflow: initial !important;
   white-space: initial !important;
 }
+
+/* line 112, ../sass/screen.scss */
+.meAction {
+  color: #4caf50 !important;
+}
+
+/* line 115, ../sass/screen.scss */
+.oppAction {
+  color: #d32f2f !important;
+}

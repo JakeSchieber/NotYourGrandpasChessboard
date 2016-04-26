@@ -112,6 +112,7 @@ angular.module('nygc.controllers', [])
     handleBoardUpdate(data);
   });
   Socket.on("boardUpdate", function (data) {
+    console.log(data);
     handleBoardUpdate(data);
 	});
   

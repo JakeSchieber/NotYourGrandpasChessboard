@@ -127,7 +127,8 @@ class Board {
             let ret = {
                 turn: this.game.turn(),
                 boardFen: this.game.fen(),
-                move: move
+                move: move,
+                history: this.game.history({ verbose: true })
             };
             return ret;
         }

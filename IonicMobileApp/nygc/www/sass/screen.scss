@@ -107,3 +107,11 @@ $darkenMain: darken($crazyOrangeGrad1, 6);
     overflow: initial !important;
     white-space: initial !important;
 }
+
+// colors used to denoted whose action in move list.
+.meAction {
+  color: #4caf50 !important;
+}
+.oppAction {
+  color: #d32f2f !important;
+}

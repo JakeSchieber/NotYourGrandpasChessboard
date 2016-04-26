@@ -1,22 +1,42 @@
-<ion-view view-title="Game">
-  <ion-content class="" style="background-color: #eee" scroll="false">
+<ion-view view-title="Mockboard">
+  <ion-content class="" style="background-color: #eee">
     
     <div style="padding: 15px 11px 15px 12px;">
-      <h3>MockBoard Companion</h3>
+      <div style="margin: 5px 0 5px 0; height: 100px;">
+        <img src="img/chessPieceInv.svg" height="80px" width="80px" style="float: left; display: inline-block;">
+        <h3 style="padding: 5px 0 0 10px; display: inline-block;">NYGC Companion</h3>
+      </div>
+      
       <div ng-if="!mockboardInitted || !gameboardInitted" style="margin: 0 0 20px 0;">
         <h4><span class="label label-black">Loading...</span></h4>
       </div>
       
-      <div ng-if="mockboardInitted && gameboardInitted" style="margin: 0 0 15px 0;">
+      <div ng-if="mockboardInitted && gameboardInitted" style="margin: 0 0 30px 0;">
         <h2 ng-if="me == placing"><span class="label label-success">Your Turn</span></h2>
         <h2 ng-if="me != placing"><span class="label label-danger">Waiting For Opponent</span></h2>
       </div>
       
-      <div>
-        <h6>Current Moves List</h6>
+      <!-- This should not be showing if it is not the current user's turn -->
+      <div style="margin-bottom: 30px;">
+        <h4 style="margin-bottom: 3px;">Current Move Sequence:</h4>
         <p ng-if="moveSequenceAr.length > 0"><span class="label label-black" ng-repeat="mov in moveSequenceAr">{{mov}}</span></p>
-        <p ng-if="!moveSequenceAr || moveSequenceAr.length == 0">There are no moves in the current sequence.</p>
+        <p ng-if="me == placing && (!moveSequenceAr || moveSequenceAr.length == 0)">Move a piece to begin your move sequence.</p>
+        <p ng-if="me != placing">Do not move any pieces! Your opponent is making their move.</p>
       </div>
+
+      <!-- The nove list: Moves submitted by both current user and opponent. -->      
+      <div class="list">
+        <div class="item item-divider">
+          Move list
+        </div>
+        <a ng-repeat="mov in moveList" class="item" href="#" ng-class="{'meAction': mov.me, 'oppAction': !mov.me }">
+          {{mov.title}}
+        </a>
+        <a ng-if="moveList.length == 0" class="item" href="#">
+          No moves have been made yet.
+        </a>
+      </div>
+
       <!--
         We are removing the mockboard and replacing it with a moves list...
         <div id="mockboard" style="width: 100%"></div>

@@ -165,7 +165,8 @@ enum BoardType {
 interface boardUpdate {
   turn?: any,
   boardFen: any,
-  move?: any // required on move, not on init
+  move?: any, // required on move, not on init
+  history: any // an array of verbose chess history.
 }
 
 class User {
@@ -225,7 +226,8 @@ class Board {
       let ret: boardUpdate = {
         turn: this.game.turn(),
         boardFen: this.game.fen(),
-        move: move
+        move: move,
+        history: this.game.history({ verbose: true })
       }
       return ret;
     }

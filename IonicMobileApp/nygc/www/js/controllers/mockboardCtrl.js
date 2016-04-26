@@ -33,7 +33,36 @@ angular.module('nygc.controllers')
     animation: 'slide-in-up'
   });
   
-  
+  /**
+   * Handles the scoped moveslist.
+   */
+  $scope.moveList = []; // a list to display all of the moves made in the current game.
+  function initMovesList(chessJsMoveAr) {
+    for(var i=0; i<chessJsMoveAr.length; i++) {
+      appendToMoveList(chessJsMoveAr[i]);
+    }
+  }
+  /**
+   * Takes in a move formatted to chess.js standards.
+   * Move from api:  {from: "d7", to: "d5"}
+   * Move format in list: 
+   *   {
+   *     title: "A2 -> E3 (Pawn attack Queen)",
+   *     me: true
+   *   }
+   *  
+   */
+  $scope.turnFlag = true; // used to alternate the role of the move placement.
+  function appendToMoveList(move) {
+    $scope.moveList.push({
+      title: move.from + " -> " + move.to,
+      me: $scope.turnFlag 
+    });
+    $scope.turnFlag = !$scope.turnFlag;
+  }
+  function clearMovesList() {
+    $scope.moveList = [];
+  }
   /**
    * Switch board sides.
    * NOTE: This method
@@ -71,6 +100,7 @@ angular.module('nygc.controllers')
     Socket.emit("restartGame", { });
     
     // reset the gameBoard and tell user to reset the pieces
+    clearMovesList();
     $scope.activeChessGame = new Chess(); // new chess game
     compareMockToGame("User requested to reset the game.");
     
@@ -133,6 +163,9 @@ angular.module('nygc.controllers')
     $scope.activeChessGame = new Chess(data.boardFen);
         
     $scope.$apply(function() {
+      // init the list of moves to the user.
+      initMovesList(data.history);
+      
       $scope.gameboardInitted = true;
       $scope.placing = data.turn;
       joinInittedBoards();
@@ -169,6 +202,7 @@ angular.module('nygc.controllers')
       // if a reset request then force the user to reset their board.
       if(data.isReset) {
         console.log("request is a reset, force reset condition.");
+        clearMovesList();
         $scope.activeChessGame = new Chess(); // new chess game
         // Note: We should add a flag here so that we can make a unique message in the alert window.
         compareMockToGame("Opponent requested to reset the game.");
@@ -178,10 +212,11 @@ angular.module('nygc.controllers')
       // assume that whenever we receive a board update from the server that a move was made by the opponent
       // and that it is now our turn.
       
-      // update the chess.js logic for the game.
+      // update the chess.js logic for the game. (Could add moves, but this is easier.)
       $scope.activeChessGame = new Chess(data.boardFen);
       // switch the labels specifing whose turn it is.
       $scope.switchTurns();
+      appendToMoveList(data.move);
       // update the board on the screen.
       // NOTE: isReset flag sent inside of data now.
       console.log(data);
@@ -241,6 +276,7 @@ angular.module('nygc.controllers')
     }
     // will be set low when the error is finally resolved.
     $scope.compareBoardFlag = !boardsMatch;
+    $scope.moveSequenceAr = [];
   }
   
   /**
@@ -254,10 +290,14 @@ angular.module('nygc.controllers')
   function handleBoardUpdate(gameUpdate, isInit, validateMove) {
     // if the board bitmap has been set before, meaning that this update is a move and not the initialization.
     // NOTE: on board reset we simply re-init the board, dont want to handle any moves...
+    console.log("test");
+    console.log(!isInit);
+    console.log(!gameUpdate.isReset);
     if(!isInit && !gameUpdate.isReset){
       // NOTE: must be before the move is validated, else we will not reset to the proper location.
       var origBoardFen = boardFen;
       boardFen = gameUpdate.boardFen;
+      console.log("yep");
       
       // Move validation does not need to be performed if move is either from the server (not made by me)
       // or if they are made when the compareBoardFlag is high (meaning that we are in the process of resetting the board)
@@ -312,6 +352,11 @@ angular.module('nygc.controllers')
    */
   var lastKnownValidBoard;
   $scope.moveSequenceAr;
+  
+/*
+  BE ABLE TO HANDLE A SLIDING MOTION!!! Implement settling logic.
+*/
+
   function handleMove(move, origBoardFen) {        
     // Init variables responsible for creating a move sequence if not yet initted
     if(!lastKnownValidBoard) {
@@ -355,6 +400,12 @@ angular.module('nygc.controllers')
     
     console.log(move);
     
+    /*
+      Allow for multiple move sequences where pieces can be removed and create display the past move list to the user on the UI.
+      
+      NOTE: We should change the reset the game logic toa function which takes care of reset things like the move list. 
+    */
+    
     var attemptedMove, moveAttempted;
     if($scope.moveSequenceAr.length == 0 && move.length == 2) {
       // No move sequence started, but complete move has been made
@@ -363,7 +414,11 @@ angular.module('nygc.controllers')
       moveAttempted = true;
     } else if ($scope.moveSequenceAr.length == 0 && move.length == 1) {
       // if we have not started a move sequence and if this is only one move in a sequence log the move and wait for the next
-      
+      $scope.$apply(function() {
+        // just a piece picked up.
+        // NOTE: This is too hard to test against since the user may pick up first the piece which they are going to attack.
+        $scope.moveSequenceAr.push(move[0].location);
+      });
     } else if($scope.moveSequenceAr.length == 1 && move.length == 2) {
       /**
        * If we have already started a move sequence and if a complete move has been made.
@@ -371,6 +426,41 @@ angular.module('nygc.controllers')
        * USE CASE: User picks up the piece that they want to take, then move the attacking piece
        * to that same "taken" location
        */
+      $scope.$apply(function() {
+        // special complete a move.
+        $scope.moveSequenceAr.push(move[0].location);
+      });
+      // this will complete a move.
+    } else if($scope.moveSequenceAr.length == 1 && move.length == 1) {
+      /**
+       * If we have already started a move sequence and if a half move has been made.
+       * 
+       * USE CASE: User picks up the piece that they want to take and then picks up their own piece.
+       * USE CASE: User picks up the piece that they want to move, then sets it down.
+       */
+      $scope.$apply(function() {
+        
+        getValidMove($scope.moveSequenceAr[0], move[0].location);
+        
+        // special complete a move.
+        $scope.moveSequenceAr.push(move[0].location);
+        
+        if(move[0].action == "down" && move[0].location == $scope.moveSequenceAr[0]) {
+          // Returned a piece that the user just picked up.
+          console.log("piece returned.");
+          $scope.moveSequenceAr = [];
+          return;
+        } else if(move[0].action == "down") {
+          // The user returned their piece to the board but at a new location.
+          
+          $scope.moveSequenceAr = [];
+          return;
+        }
+        
+        
+        
+      });
+      // this will complete a move.
     } else if($scope.moveSequenceAr.length == 2 && move.length == 1) {
       /**
        * If we have 2 moves in the current sequence and the user places a piece down
@@ -378,6 +468,31 @@ angular.module('nygc.controllers')
        * USE CASE: User picks up their piece and the piece that they want to take, then places their
        * own piece onto the piece of the boad which they are "taking"
        */
+      $scope.$apply(function() {
+        
+        
+        
+        
+        
+        
+        console.log(moves1);
+        console.log(moves2);
+        if(moves1.length > 0 && moves2.length == 0) {
+          
+        }
+        
+        if (move[0].action == "down") {
+          // check if either of the move locations have any valid moves?
+          // move
+          // location 1 $scope.moveSequenceAr[0] move[0].location
+        } else if (move[0].action == "up") {
+          // if the piece that we were attacking was removed. Still need to confirm the locaiton.
+          // What options are available?...
+        }
+        
+        $scope.moveSequenceAr.push(move[0].location);
+      });
+      // this will complete a move.
     } else {
       console.log("Oops, the requested move does not work with the current sequence... How would you like to proceed?");
       console.log(move);
@@ -404,10 +519,60 @@ angular.module('nygc.controllers')
       // move attempted and accepted locally - emit the move request to the server (may still be rejected by the server)
       console.log("Valid move sequnce.");
       Socket.emit("moveRequest", { move: attemptedMove });
+      
+      // NOTE: this wont work when we start doing complex moves: We need to submit the whole movie.
+      appendToMoveList({ from: move[0].location, to: move[1].location });
+      
       $scope.$apply(function() {
         $scope.switchTurns();
       });
     }
+  }
+  
+  /**
+   * This is a function used to take 2 move LOCATIONS, in no specific order, and determine if a valid 
+   * move combination exists between them.
+   * NOTE: Uses the current scoped lastKnownValidBoard
+   * 
+   * RETURNS: {
+   *  valid: boolean denoting whether a valid move exists (when false compareMockToGame triggered.)
+   *  move: an object containing the from to move combination
+   * }
+   * 
+   * NOTE: even if a valid move exists, this funciton does not handle the making of the move itself.
+   */
+  function getValidMove(loc1, loc2) {
+    console.log("starting this");
+    console.log(loc1);
+    console.log(loc2);
+    var moves1 = $scope.activeChessGame.moves(loc1);
+    var moves2 = $scope.activeChessGame.moves(loc2);
+    console.log("get valid move test");
+    console.log(moves1);
+    console.log(moves2);
+    
+    if (moves1.indexOf(loc2)) {
+      console.log("valid move A from:");
+      console.log(moves1);
+      console.log(loc2);
+    }
+    
+    else if(moves2.indexOf(loc1)) {
+      console.log("valid move B from:");
+      console.log(moves2);
+      console.log(loc1);
+    }
+    
+    else {
+      // The two spaces have no valid move combinations.... Invalid sequence.
+      compareMockToGame("Invalid sequence detected, there are no available moves involving spaces: %s and %s.", loc1, loc2);
+      
+      return {
+        valid: false,
+        move: {}
+      };
+    }
+    
   }
   
   // ALERT MODAL FUNCTIONS
@@ -442,7 +607,7 @@ angular.module('nygc.controllers')
   $scope.openInfoModal = function() {
     
     // sometimes the socket goes off before the page is finished initializing. If so wait until modal is created.
-    if(!$scope.infoModal) {
+    if(!$scope.infoModal || !$scope.infoModal.show) {
       setTimeout(function(){
         $scope.openModal()
       }, 10);
@@ -471,13 +636,12 @@ angular.module('nygc.controllers')
     // Currently clicking reset on the app resets the mockboard... We do not want this. We want to trigger a board reset by user force.
     
     $scope.closeInfoModal();
-    // $scope.restartGame();
+    $scope.restartGame();
   }
   $scope.$on('$destroy', function() {
     $scope.infoModal.remove();
   });
-})
-;
+});
 
 function isPowerOfTwo(num) {
   return (num & (num - 1)) == 0;
