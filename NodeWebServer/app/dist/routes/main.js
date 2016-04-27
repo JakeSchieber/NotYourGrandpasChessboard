@@ -10,7 +10,7 @@ module.exports = function (app) {
         res.send(data.getBoardBitMapString());
     });
     app.get('/api/getMove', function (req, res) {
-        res.send(data.board.move.action ? data.board.move.action : "");
+        res.send(data.board.move.action ? data.board.move.action : "00-00");
     });
     app.get('/api/moveFinished/:move', function (req, res) {
         res.send(data.finishMove(req.params.move));

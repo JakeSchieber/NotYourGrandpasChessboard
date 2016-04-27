@@ -10,8 +10,23 @@ var moveState = {
     inProgress: "inProgress"
 };
 function requestMove(moveString) {
-    if (moveString.length != 5) {
-        return "Error-InvalidMoveStringRequested";
+    var moveAr = moveString.split('-');
+    if (moveAr.length != 2) {
+        return "Error-InvalidMoveStringRequested (1)";
+    }
+    else if (moveAr[0].length != 2 || moveAr[1].length != 2) {
+        return "Error-InvalidMoveStringRequested (2)";
+    }
+    console.log(moveAr);
+    var mov1a = parseInt(moveAr[0].substring(0, 1));
+    var mov1b = parseInt(moveAr[0].substring(1, 2));
+    var mov2a = parseInt(moveAr[1].substring(0, 1));
+    var mov2b = parseInt(moveAr[1].substring(1, 2));
+    if (isNaN(mov1a) || isNaN(mov1b) || isNaN(mov2a) || isNaN(mov2b)) {
+        return "Error-InvalidMoveStringRequested (3)";
+    }
+    else if (mov1a < 1 || mov1a > 8 || mov1b < 1 || mov1b > 8 || mov2a < 1 || mov2a > 8 || mov2b < 1 || mov2b > 8) {
+        return "Error-InvalidMoveStringRequested (4)";
     }
     exports.board.move.action = moveString;
     exports.board.move.state = moveState.inProgress;
