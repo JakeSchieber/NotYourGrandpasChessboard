@@ -38,22 +38,15 @@ module.exports = function(app) {
   });
   
   /**
-   * Takes in a move, and assuming that is the current move, sets the move to copmleted.
-   */
-  app.get('/api/moveFinished/:move', function(req, res) {
-    res.send(data.finishMove(req.params.move));
-  });
-  
-  /**
    * Signals a reset request from the board.
    * When this goes high, the boward waits until confirmation of reset from the gameState APU 
    */
   app.get('/api/resetRequest', function(req, res) {
-    
+    res.send(data.setReset(true));
   });
   
   /**
-   * Retursn the current game state string from the data object
+   * Returns the current game state string from the data object
    */
   app.get('/api/gameState', function(req, res) {
     

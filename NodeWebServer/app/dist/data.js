@@ -3,11 +3,20 @@ exports.board = {
     move: {
         action: null,
         state: null
-    }
+    },
+    reset: false,
+    gameState: gameState.uninitialized
 };
 var moveState = {
     complete: "complete",
     inProgress: "inProgress"
+};
+var gameState = {
+    uninitialized: "uninitialized",
+    over: "over",
+    whiteMove: "whiteMove",
+    blackMove: "blackMove",
+    waitingForFirstMove: "waitingForFirstMove"
 };
 function requestMove(moveString) {
     var moveAr = moveString.split('-');
@@ -17,7 +26,6 @@ function requestMove(moveString) {
     else if (moveAr[0].length != 2 || moveAr[1].length != 2) {
         return "Error-InvalidMoveStringRequested (2)";
     }
-    console.log(moveAr);
     var mov1a = parseInt(moveAr[0].substring(0, 1));
     var mov1b = parseInt(moveAr[0].substring(1, 2));
     var mov2a = parseInt(moveAr[1].substring(0, 1));
@@ -67,6 +75,12 @@ function getBoardBitMapString() {
     return exports.board.bitmap.join('-');
 }
 exports.getBoardBitMapString = getBoardBitMapString;
+function setReset(high) {
+    exports.board.reset = high;
+    return "success";
+}
+exports.setReset = setReset;
 function getGameState() {
+    return exports.board.gameState;
 }
 exports.getGameState = getGameState;
