@@ -9,6 +9,8 @@
 import mongoose = require('mongoose');
 import * as SocketIO from 'socket.io';
 
+import data = require('./data');
+
 // no tsd exists for chess.js
 var Chess = require('chess.js').Chess;
 
@@ -21,6 +23,19 @@ var mockboardBitmap = [255, 255, 0, 0, 0, 0, 255, 255];
 export function socketInit(io: SocketIO.Server) {
   io.on('connection', function (socket) {
     console.log("Connection Established.");
+    
+    // cache a copy of the data: Note must not use objects else this will just be a pointer
+    var dataCopy = data.board.data;
+    // This is the replacement to the bluetooth logic
+    setInterval(function() {      
+      // just outputting to everybody, but we could jost output to those in lobby
+      if(dataCopy != data.board.data) {
+        // hoping that this triggers on everybody...
+        console.log("The value has changed!!!!");
+        socket.emit('bluetoothPoll', { newData: data.board.data});
+        dataCopy = data.board.data;
+      }
+    }, 100);
     
     // create a new user, this will default their game.
     var user = new User();

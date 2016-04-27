@@ -57,6 +57,11 @@ angular.module('controllers')
     });
 	});
   
+  Socket.on('bluetoothPoll', function(data) {
+    alert("Got em!");
+    console.log(data);
+  })
+  
   // Someone else on the same socked updated the board, make it so on our board as well.
   Socket.on("boardUpdate", function (data) {
     console.log("boardUpdate request received");

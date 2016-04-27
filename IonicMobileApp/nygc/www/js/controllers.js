@@ -1,4 +1,4 @@
-angular.module('nygc.controllers', [])
+angular.module('nygc.controllers', ['ngCordovaBluetoothLE'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
 
@@ -6,6 +6,80 @@ angular.module('nygc.controllers', [])
 
 .controller('HomeCtrl', function($scope) {
 
+})
+
+/**
+ * Connection controller
+ * Controls the connection with the bluetooth receiver
+ * 
+ * NOTE: This ought to be exported to a service when the time is correct.
+ */
+.controller('ConCtrl', function($scope, Bluetooth) {
+  // NOTE: We should be able to handle the scanning already in progress error....
+  // or just not allow the user to click scan again when alrady scanning...
+  
+  /**
+   * Function to be used to connect to the Bluetooth chip on the NYGC board
+   * 
+   * TODO: We need this to stop scanning when we find the device that we are looking for 
+   * and when we are scanning we should have a loading icon or something so that the user cannot
+   * repeatedly click to scan.
+   * 
+   * Question: Do we have to be scanning in order to connect?...
+   * NOTE: Wont matter as long as we stop scanning.
+   */
+  $scope.connectToNYGC = function() {
+    // Initialize the bluetooth on the device and then scan for open devices.
+    console.log("ititializing bluetooth");
+    Bluetooth.init()
+      .then(function(resp) {
+        console.log("scanning for devices.");
+        // @ this point we can turn on a spinner denoting that the app is looking for connections.
+        // This spinner can be turned off on cancel or when the device has been found.
+        return Bluetooth.scanForDevice("2140E6E4-2D57-DDA1-9264-1899B8B1CE0D"); // address corresponding to name == "HC-08"
+      })
+      .then(function(device) {
+        console.log("Connecting to bluetooth");
+        console.log(device);
+        // once the desired device has been found then attempt to connect to it.
+        return Bluetooth.connect(device.address);
+      })
+      .then(function(resp) {
+        // now that we are initialized lets get the services.
+        console.log("attempting to get the services...");
+        return Bluetooth.getCurrentServices();
+      })
+      .then(function(resp) {
+        console.log("made it to the end of the list?...");
+        console.log(resp);
+      })
+      .catch(function(err) {
+        console.log("ERROR: unable to initalize Bluetooth.");
+      });
+  };
+  
+  /**
+   * Function to disconnect from bluetooth.
+   */
+  $scope.disconnectFromNYGC = function() {
+    Bluetooth.disconnect()
+      .then(function(resp) {
+        console.log("Success, we have disconnected from NYGC.");
+        console.log(resp);
+      })
+      .catch(function(err) {
+        console.log("ERROR: unable to disconnect.");
+        console.log(err);
+      });
+  }
+  
+  /**
+   * Test current address
+   */
+  
+  /**
+   * Check 
+   */
 })
 
 .controller('GameCtrl', function($scope, Socket, $ionicModal) {

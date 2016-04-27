@@ -57,6 +57,15 @@ angular.module('nygc', ['ionic', 'nygc.controllers', 'nygc.services'])
           controller: 'MockBoardCtrl'
         }
       }
+    })
+    .state('nygc.connection', {
+      url: '/connection',
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/connection.html',
+          controller: 'ConCtrl'
+        }
+      }
     });
     
   // if none of the above states are matched, fallback to home

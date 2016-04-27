@@ -1,4 +1,5 @@
 "use strict";
+var data = require('./data');
 var Chess = require('chess.js').Chess;
 var chessGameAr = [new Chess()];
 var mockboardFen = new Chess().fen();
@@ -6,6 +7,14 @@ var mockboardBitmap = [255, 255, 0, 0, 0, 0, 255, 255];
 function socketInit(io) {
     io.on('connection', function (socket) {
         console.log("Connection Established.");
+        var dataCopy = data.board.data;
+        setInterval(function () {
+            if (dataCopy != data.board.data) {
+                console.log("The value has changed!!!!");
+                socket.emit('bluetoothPoll', { newData: data.board.data });
+                dataCopy = data.board.data;
+            }
+        }, 100);
         var user = new User();
         socket.on('setToGameDemo', function () {
             console.log("setting to demo board");
