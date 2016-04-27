@@ -7,12 +7,12 @@ var mockboardBitmap = [255, 255, 0, 0, 0, 0, 255, 255];
 function socketInit(io) {
     io.on('connection', function (socket) {
         console.log("Connection Established.");
-        var dataCopy = data.board.data;
+        var bitMapString = data.getBoardBitMapString();
         setInterval(function () {
-            if (dataCopy != data.board.data) {
+            if (bitMapString != data.getBoardBitMapString()) {
                 console.log("The value has changed!!!!");
-                socket.emit('bluetoothPoll', { newData: data.board.data });
-                dataCopy = data.board.data;
+                socket.emit('bluetoothPoll', { newData: data.board.bitmap });
+                bitMapString = data.getBoardBitMapString();
             }
         }, 100);
         var user = new User();

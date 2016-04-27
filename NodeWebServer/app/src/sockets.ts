@@ -24,16 +24,21 @@ export function socketInit(io: SocketIO.Server) {
   io.on('connection', function (socket) {
     console.log("Connection Established.");
     
-    // cache a copy of the data: Note must not use objects else this will just be a pointer
-    var dataCopy = data.board.data;
+    /**
+     * This logic connects the board rest request front end to the socket api backend.
+     */
+    // cache a string copy of the bitmap
+    var bitMapString = data.getBoardBitMapString();
     // This is the replacement to the bluetooth logic
     setInterval(function() {      
-      // just outputting to everybody, but we could jost output to those in lobby
-      if(dataCopy != data.board.data) {
-        // hoping that this triggers on everybody...
+      // every 100 milliseconds check if the bit map string has changed
+      if(bitMapString != data.getBoardBitMapString()) {
+        // if the board bitmap string has changed then we need to process a diff!!!
+        // NOTE: This logic is going to get harder now that we have to work off of diffs and not necessarily
+        //     guaranteed placement.
         console.log("The value has changed!!!!");
-        socket.emit('bluetoothPoll', { newData: data.board.data});
-        dataCopy = data.board.data;
+        socket.emit('bluetoothPoll', { newData: data.board.bitmap});
+        bitMapString = data.getBoardBitMapString();
       }
     }, 100);
     

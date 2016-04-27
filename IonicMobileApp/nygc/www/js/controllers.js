@@ -9,6 +9,16 @@ angular.module('nygc.controllers', ['ngCordovaBluetoothLE'])
 })
 
 /**
+ * Allows for the app to make direct requests to the board
+ * Overrides the game logic.
+ * 
+ * WARNING: This will wipe the current move in the game, 
+ */
+.controller('BoardCntrlCtrl', function($scope) {
+  
+})
+
+/**
  * Connection controller
  * Controls the connection with the bluetooth receiver
  * 
