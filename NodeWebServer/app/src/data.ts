@@ -4,6 +4,18 @@
  * which changes the values stored in the board global variable.
  */
 
+/**
+ * The possible game states are written below.
+ * Special state waitingForFirstMove represents the state which is fallen into
+ * after a board reset request.
+ */
+var gameState = {
+  uninitialized: "uninitialized", // game has not officially been started by the app
+  over: "over",
+  whiteMove: "whiteMove",
+  blackMove: "blackMove",
+  waitingForFirstMove: "waitingForFirstMove"
+}
 
 /**
  * Global board object which is the middle man between socket.io and the boards rest reqest service.
@@ -25,19 +37,6 @@ export var board = {
 var moveState = {
   complete: "complete",
   inProgress: "inProgress"
-}
-
-/**
- * The possible game states are written below.
- * Special state waitingForFirstMove represents the state which is fallen into
- * after a board reset request.
- */
-var gameState = {
-  uninitialized: "uninitialized", // game has not officially been started by the app
-  over: "over",
-  whiteMove: "whiteMove",
-  blackMove: "blackMove",
-  waitingForFirstMove: "waitingForFirstMove"
 }
 
 /**

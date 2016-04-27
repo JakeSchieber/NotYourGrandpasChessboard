@@ -1,3 +1,10 @@
+var gameState = {
+    uninitialized: "uninitialized",
+    over: "over",
+    whiteMove: "whiteMove",
+    blackMove: "blackMove",
+    waitingForFirstMove: "waitingForFirstMove"
+};
 exports.board = {
     bitmap: [],
     move: {
@@ -10,13 +17,6 @@ exports.board = {
 var moveState = {
     complete: "complete",
     inProgress: "inProgress"
-};
-var gameState = {
-    uninitialized: "uninitialized",
-    over: "over",
-    whiteMove: "whiteMove",
-    blackMove: "blackMove",
-    waitingForFirstMove: "waitingForFirstMove"
 };
 function requestMove(moveString) {
     var moveAr = moveString.split('-');
