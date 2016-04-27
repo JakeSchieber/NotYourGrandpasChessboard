@@ -10,7 +10,7 @@ module.exports = function (app) {
     app.get('/api/getCurrentBoard', function (req, res) {
         res.send(data.board.data);
     });
-    app.get('/api/sampleMove', function (req, res) {
+    app.get('/api/getMove', function (req, res) {
         res.send(data.board.exMove);
     });
     app.get('/api/test', function (req, res) {
