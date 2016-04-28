@@ -4,7 +4,8 @@ var myName = "No one named me";
 var data = require('./../data');
 module.exports = function (app) {
     app.get('/api/updateBoard/:data', function (req, res) {
-        console.log(req.params.data);
+        var timestamp = new Date().getTime();
+        console.log(timestamp + ": " + req.params.data);
         res.send(data.setBoardBitmap(req.params.data));
     });
     app.get('/api/getCurrentBoard', function (req, res) {

@@ -68,7 +68,6 @@ function setBoardBitmap(boardBitMapString) {
         return "Error-StringMustBeADashSeparatedListOf8Numbers";
     }
     exports.board.bitmap = bitmap;
-    console.log(exports.board.bitmap);
     return "success";
 }
 exports.setBoardBitmap = setBoardBitmap;

@@ -468,11 +468,13 @@ angular.module('nygc.controllers')
           return;
         } else if(move[0].action == "down") {
           // The user returned their piece to the board but at a new location.
-          
+          console.log("move sequence finished");
+          attemptedMove = $scope.activeChessGame.move({ from: $scope.moveSequenceAr[0], to: move[0].location });
           $scope.moveSequenceAr = [];
           return;
         }
-        // else anotehr piece was picked up.
+        // else another piece was picked up, continue the sequence
+        $scope.moveSequenceAr.push(move[0].location);
       });
       // this will complete a move.
     } else if($scope.moveSequenceAr.length == 2 && move.length == 1) {
