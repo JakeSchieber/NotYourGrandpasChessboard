@@ -14,6 +14,7 @@ module.exports = function(app) {
    * requests instead of actually using the bluetooth module.
    */
   app.get('/api/updateBoard/:data', function(req, res) {
+    console.log(req.params.data);
     // set the new board bitmap and return the response string
     res.send(data.setBoardBitmap(req.params.data));
   });

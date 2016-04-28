@@ -123,6 +123,7 @@ export function setBoardBitmap(boardBitMapString) {
     return "Error-StringMustBeADashSeparatedListOf8Numbers"
   }
   board.bitmap = bitmap;
+  console.log(board.bitmap);
   return "success";
 }
 

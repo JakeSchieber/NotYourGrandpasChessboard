@@ -1,5 +1,9 @@
 angular.module('nygc.controllers')
 
+/**
+ * TODO: You can move pieces when its not your turn without reprecussion.
+ */
+
 .controller('MockBoardCtrl', function($scope, Socket, $ionicModal) {
   /**
    * Scoped game variables
@@ -102,6 +106,7 @@ angular.module('nygc.controllers')
     // reset the gameBoard and tell user to reset the pieces
     clearMovesList();
     $scope.activeChessGame = new Chess(); // new chess game
+    $scope.resetTurns();
     compareMockToGame("User requested to reset the game.");
     
     // We are choosing at this moment to forgo showing a welcome message on restart of the game.
@@ -204,6 +209,7 @@ angular.module('nygc.controllers')
         console.log("request is a reset, force reset condition.");
         clearMovesList();
         $scope.activeChessGame = new Chess(); // new chess game
+        $scope.resetTurns();
         // Note: We should add a flag here so that we can make a unique message in the alert window.
         compareMockToGame("Opponent requested to reset the game.");
         return;
@@ -370,7 +376,7 @@ angular.module('nygc.controllers')
       }
       // need to reset the board 
       lastKnownValidBoard = new Chess(origBoardFen);
-      $scope.moveSequenceAr = [];
+      $scope.moveSequenceAr = []; // this is redundant we shifted this down to after moves being made.
     }
     
     // validate the move array.
@@ -423,12 +429,22 @@ angular.module('nygc.controllers')
       /**
        * If we have already started a move sequence and if a complete move has been made.
        * 
-       * USE CASE: User picks up the piece that they want to take, then move the attacking piece
+       * USE CASE 1: User picks up the piece that they want to take, then move the attacking piece
        * to that same "taken" location
        */
       $scope.$apply(function() {
         // special complete a move.
         $scope.moveSequenceAr.push(move[0].location);
+        
+        // USE CASE 1
+        if($scope.moveSequenceAr[0] == move[1].location) {
+          // user picked up the piece that they wanted to take then performed the attack action
+          attemptedMove = $scope.activeChessGame.move({ from: move[0].location, to: move[1].location });
+        } else {
+          console.log("USE CASE 1 FAIL:");
+          // no set on attempted move will cause this to trigger a reset.
+        }
+        moveAttempted = true;
       });
       // this will complete a move.
     } else if($scope.moveSequenceAr.length == 1 && move.length == 1) {
@@ -456,9 +472,7 @@ angular.module('nygc.controllers')
           $scope.moveSequenceAr = [];
           return;
         }
-        
-        
-        
+        // else anotehr piece was picked up.
       });
       // this will complete a move.
     } else if($scope.moveSequenceAr.length == 2 && move.length == 1) {
@@ -509,6 +523,7 @@ angular.module('nygc.controllers')
     // if a move was attempted, whether or not it is accepted, we need to clear the lastKnownValidBoard
     // this will reset the moveSequenceAr by extension.
     lastKnownValidBoard = null;
+    $scope.moveSequenceAr = [];
     
     if(!attemptedMove) {
       // a move attempted and it failed
