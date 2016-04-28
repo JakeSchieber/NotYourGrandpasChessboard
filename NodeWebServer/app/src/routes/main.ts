@@ -9,6 +9,19 @@ import data = require('./../data');
 
 module.exports = function(app) {
   /**
+   * 
+   */
+  app.get('/api/dopeAFMoveSequence/:data', function(req, res) {
+    var timestamp = new Date().getTime();
+    console.log(timestamp + ": " + req.params.data);
+    // set the new board bitmap and console an error if not a success
+    if(data.setBoardBitmap(req.params.data).indexOf("success") < 0) {
+      console.log("invalid post to bitmap");
+    }
+    res.send(data.board.move.action ? data.board.move.action : "00-00");
+  });
+  
+  /**
    * Sudo Bluetooth calls.
    * Due to a crappy bluetooth module we are just going to poll data to the server with wget
    * requests instead of actually using the bluetooth module.

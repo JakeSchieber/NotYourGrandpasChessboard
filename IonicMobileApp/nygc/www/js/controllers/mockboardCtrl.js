@@ -455,22 +455,16 @@ angular.module('nygc.controllers')
        * USE CASE: User picks up the piece that they want to move, then sets it down.
        */
       $scope.$apply(function() {
-        
-        getValidMove($scope.moveSequenceAr[0], move[0].location);
-        
-        // special complete a move.
-        $scope.moveSequenceAr.push(move[0].location);
-        
         if(move[0].action == "down" && move[0].location == $scope.moveSequenceAr[0]) {
           // Returned a piece that the user just picked up.
           console.log("piece returned.");
           $scope.moveSequenceAr = [];
           return;
         } else if(move[0].action == "down") {
-          // The user returned their piece to the board but at a new location.
+          // The user returned their piece to the board but at a new location. Completed a move
           console.log("move sequence finished");
           attemptedMove = $scope.activeChessGame.move({ from: $scope.moveSequenceAr[0], to: move[0].location });
-          $scope.moveSequenceAr = [];
+          moveAttempted = true;
           return;
         }
         // else another piece was picked up, continue the sequence
@@ -533,12 +527,14 @@ angular.module('nygc.controllers')
       compareMockToGame("The move which you have requested is invalid.");
       
     } else {
+      console.log(attemptedMove);
+      
       // move attempted and accepted locally - emit the move request to the server (may still be rejected by the server)
       console.log("Valid move sequnce.");
       Socket.emit("moveRequest", { move: attemptedMove });
       
       // NOTE: this wont work when we start doing complex moves: We need to submit the whole movie.
-      appendToMoveList({ from: move[0].location, to: move[1].location });
+      appendToMoveList({ from: attemptedMove.from, to: attemptedMove.to });
       
       $scope.$apply(function() {
         $scope.switchTurns();
@@ -628,6 +624,7 @@ angular.module('nygc.controllers')
       setTimeout(function(){
         $scope.openModal()
       }, 10);
+      return;
     }
     
     $scope.infoModal.show();
@@ -760,13 +757,13 @@ function getMove(start, end) {
     // if only the startMoveLocation is specified then the piece was just placed down.
     return [{
         location: startMoveLocation,
-        action: "down"
+        action: "up"
     }];
   } else if(endMoveLocation) {
     // if only the endMoveLocation is specified then the piece was just picked up.
     return [{
         location: endMoveLocation,
-        action: "up"
+        action: "down"
     }];
   }
   console.log("Oops, getMove is returning that no move has occurred...");

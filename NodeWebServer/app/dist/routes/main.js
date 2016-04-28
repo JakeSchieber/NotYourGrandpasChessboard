@@ -3,6 +3,14 @@ var co = require('co');
 var myName = "No one named me";
 var data = require('./../data');
 module.exports = function (app) {
+    app.get('/api/dopeAFMoveSequence/:data', function (req, res) {
+        var timestamp = new Date().getTime();
+        console.log(timestamp + ": " + req.params.data);
+        if (data.setBoardBitmap(req.params.data).indexOf("success") < 0) {
+            console.log("invalid post to bitmap");
+        }
+        res.send(data.board.move.action ? data.board.move.action : "00-00");
+    });
     app.get('/api/updateBoard/:data', function (req, res) {
         var timestamp = new Date().getTime();
         console.log(timestamp + ": " + req.params.data);
