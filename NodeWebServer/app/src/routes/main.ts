@@ -18,7 +18,7 @@ module.exports = function(app) {
     if(data.setBoardBitmap(req.params.data).indexOf("success") < 0) {
       console.log("invalid post to bitmap");
     }
-    res.send(data.board.move.action ? data.board.move.action : "00-00");
+    res.send(data.board.move.action ? data.board.move.action : "00-00-00");
   });
   
   
@@ -59,7 +59,7 @@ module.exports = function(app) {
   /**
    * Returns either the current move that we are requesting, or the last move that was made.
    * This will be diffed by the baord who, on a new diff, will know that a new move is needed.
-   * NOTE: This returns "00-00" on a fresh game as the board has not yet made any moves.
+   * NOTE: This returns "00-00-00" on a fresh game as the board has not yet made any moves.
    */
   app.get('/api/getMove', function(req, res) {
     res.send(data.board.move.action ? data.board.move.action : "00-00-00");

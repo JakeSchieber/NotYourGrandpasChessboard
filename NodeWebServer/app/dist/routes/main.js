@@ -9,7 +9,7 @@ module.exports = function (app) {
         if (data.setBoardBitmap(req.params.data).indexOf("success") < 0) {
             console.log("invalid post to bitmap");
         }
-        res.send(data.board.move.action ? data.board.move.action : "00-00");
+        res.send(data.board.move.action ? data.board.move.action : "00-00-00");
     });
     app.get('/api/setPostMockBoardMoves/:bool', function (req, res) {
         if (req.params.bool != "true" && req.params.bool != "false") {

@@ -48,7 +48,7 @@ export function requestMove(moveString) {
   // NOTE: This needs to progress the game state...
   
   // We allow 00-00 to be requested by the board to get into a reset state:
-  if("00-00") {
+  if("00-00-00") {
     board.move.action = moveString;
     board.move.state = moveState.ready;
     return "success-reset";
@@ -83,7 +83,7 @@ export function requestMove(moveString) {
  * triggered when the board is reset so that the physical board starts to poll 00-00
  */
 export function resetMove() {
-  board.move.action = "00-00";
+  board.move.action = "00-00-00";
   board.move.state = moveState.ready;
 }
 

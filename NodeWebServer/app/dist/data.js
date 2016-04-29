@@ -21,7 +21,7 @@ var moveState = {
     ready: "ready"
 };
 function requestMove(moveString) {
-    if ("00-00") {
+    if ("00-00-00") {
         exports.board.move.action = moveString;
         exports.board.move.state = moveState.ready;
         return "success-reset";
@@ -49,7 +49,7 @@ function requestMove(moveString) {
 }
 exports.requestMove = requestMove;
 function resetMove() {
-    exports.board.move.action = "00-00";
+    exports.board.move.action = "00-00-00";
     exports.board.move.state = moveState.ready;
 }
 exports.resetMove = resetMove;
