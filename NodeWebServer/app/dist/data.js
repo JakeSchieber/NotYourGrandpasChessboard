@@ -132,6 +132,6 @@ exports.locationToColRowRep = locationToColRowRep;
 function moveToMoveString(move) {
     var start = locationToColRowRep(move.from);
     var end = locationToColRowRep(move.to);
-    return start.col + '' + start.row + "-" + end.col + '' + end.row;
+    return start.row + '' + start.col + "-" + end.row + '' + end.col;
 }
 exports.moveToMoveString = moveToMoveString;

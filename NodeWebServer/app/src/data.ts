@@ -199,9 +199,12 @@ export function locationToColRowRep(loc) {
 
 /**
  * where move is an object with a to and from object
+ * 
+ * NOTE: SAM LOGIC BACKWARDS
  */
 export function moveToMoveString(move) {
   var start = locationToColRowRep(move.from);
   var end = locationToColRowRep(move.to);
-  return start.col + '' + start.row + "-" + end.col + '' + end.row;
+  // return start.col + '' + start.row + "-" + end.col + '' + end.row;
+  return start.row + '' + start.col + "-" + end.row + '' + end.col;
 }
