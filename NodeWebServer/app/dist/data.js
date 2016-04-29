@@ -21,6 +21,11 @@ var moveState = {
     ready: "ready"
 };
 function requestMove(moveString) {
+    if ("00-00") {
+        exports.board.move.action = moveString;
+        exports.board.move.state = moveState.ready;
+        return "success-reset";
+    }
     var moveAr = moveString.split('-');
     if (moveAr.length != 2) {
         return "Error-InvalidMoveStringRequested (1)";

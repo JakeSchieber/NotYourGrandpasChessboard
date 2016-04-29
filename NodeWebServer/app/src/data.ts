@@ -47,7 +47,13 @@ var moveState = {
 export function requestMove(moveString) {
   // NOTE: This needs to progress the game state...
   
-
+  // We allow 00-00 to be requested by the board to get into a reset state:
+  if("00-00") {
+    board.move.action = moveString;
+    board.move.state = moveState.ready;
+    return "success-reset";
+  }
+  
   // validate move
   var moveAr = moveString.split('-');
   if(moveAr.length != 2) {
@@ -207,4 +213,5 @@ export function moveToMoveString(move) {
   var end = locationToColRowRep(move.to);
   // return start.col + '' + start.row + "-" + end.col + '' + end.row;
   return start.row + '' + start.col + "-" + end.row + '' + end.col;
+  // SAM HACK
 }
