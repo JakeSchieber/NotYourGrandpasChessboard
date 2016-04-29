@@ -172,6 +172,9 @@ angular.module('nygc.controllers')
       initMovesList(data.history);
       
       $scope.gameboardInitted = true;
+      
+      console.log("the turn is: " + data.turn);
+      
       $scope.placing = data.turn;
       joinInittedBoards();
     });
@@ -294,23 +297,22 @@ angular.module('nygc.controllers')
    * NOTE: validateMove only high on sensing changes from the mockboard poll.
    */
   function handleBoardUpdate(gameUpdate, isInit, validateMove) {
-    // if the board bitmap has been set before, meaning that this update is a move and not the initialization.
-    // NOTE: on board reset we simply re-init the board, dont want to handle any moves...
-    console.log("test");
     console.log(!isInit);
     console.log(!gameUpdate.isReset);
+    console.log(!$scope.compareBoardFlag);
+    console.log($scope.placing == $scope.me);
+    console.log(validateMove);
+    // if the board bitmap has been set before, meaning that this update is a move and not the initialization.
+    // NOTE: on board reset we simply re-init the board, dont want to handle any moves...
     if(!isInit && !gameUpdate.isReset){
       // NOTE: must be before the move is validated, else we will not reset to the proper location.
       var origBoardFen = boardFen;
       boardFen = gameUpdate.boardFen;
-      console.log("yep");
-      
       // Move validation does not need to be performed if move is either from the server (not made by me)
       // or if they are made when the compareBoardFlag is high (meaning that we are in the process of resetting the board)
       if(!$scope.compareBoardFlag && ($scope.placing == $scope.me) && validateMove) {
         console.log("validating move");
-        console.log(boardBitmap);
-        
+        // console.log(boardBitmap);
         var move = getMove(boardBitmap, gameUpdate.boardBitmap);
         // should we return false here to denote whether or not to update the board?...
         handleMove(move, origBoardFen);  
@@ -404,14 +406,13 @@ angular.module('nygc.controllers')
      * picked up or removed.
      */
     
-    console.log(move);
-    
     /*
       Allow for multiple move sequences where pieces can be removed and create display the past move list to the user on the UI.
       
       NOTE: We should change the reset the game logic toa function which takes care of reset things like the move list. 
     */
-    
+    console.log($scope.moveSequenceAr.length);
+    console.log(move.length);
     var attemptedMove, moveAttempted;
     if($scope.moveSequenceAr.length == 0 && move.length == 2) {
       // No move sequence started, but complete move has been made
@@ -479,27 +480,9 @@ angular.module('nygc.controllers')
        * own piece onto the piece of the boad which they are "taking"
        */
       $scope.$apply(function() {
-        
-        
-        
-        
-        
-        
-        console.log(moves1);
-        console.log(moves2);
-        if(moves1.length > 0 && moves2.length == 0) {
-          
-        }
-        
-        if (move[0].action == "down") {
-          // check if either of the move locations have any valid moves?
-          // move
-          // location 1 $scope.moveSequenceAr[0] move[0].location
-        } else if (move[0].action == "up") {
-          // if the piece that we were attacking was removed. Still need to confirm the locaiton.
-          // What options are available?...
-        }
-        
+
+        console.log(getValidMove($scope.moveSequenceAr[0], $scope.moveSequenceAr[1]));
+        // do something with the move and then either reject or accept it.
         $scope.moveSequenceAr.push(move[0].location);
       });
       // this will complete a move.
@@ -590,12 +573,12 @@ angular.module('nygc.controllers')
   
   // ALERT MODAL FUNCTIONS
   $scope.openModal = function() {
-    
     // sometimes the socket goes off before the page is finished initializing. If so wait until modal is created.
     if(!$scope.modal) {
       setTimeout(function(){
         $scope.openModal()
       }, 10);
+      return;
     }
     $scope.modal.show();
 
