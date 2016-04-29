@@ -47,17 +47,18 @@ function socketInit(io) {
         socket.on('boardRequest', function () {
             socket.emit('boardInit', user.board.getState(null));
         });
-        socket.on('moveRequest', function (data) {
+        socket.on('moveRequest', function (sData) {
             console.log("Move request received...");
-            if (user.board.isMockboardType || !data.move) {
+            if (user.board.isMockboardType || !sData.move) {
                 console.log("Move request rejected.");
                 socket.emit('moveRejected', user.board.getState(null));
                 return;
             }
-            var move = user.game.move(data.move);
+            var move = user.game.move(sData.move);
             if (move) {
                 console.log("Move request accepted.");
-                socket.broadcast.to(user.board.idString()).emit('boardUpdate', user.board.getState(data.move));
+                socket.broadcast.to(user.board.idString()).emit('boardUpdate', user.board.getState(sData.move));
+                data.requestMove(data.moveToMoveString(move));
             }
             else {
                 console.log("Move request rejected.");
@@ -87,6 +88,7 @@ function socketInit(io) {
             let resetBoard = user.board.getState(null);
             resetBoard.isReset = true;
             socket.broadcast.to(user.board.idString()).emit('boardUpdate', resetBoard);
+            data.resetMove();
             socket.emit('boardUpdate', resetBoard);
         });
         socket.on('disconnect', function () {

@@ -93,20 +93,24 @@ export function socketInit(io: SocketIO.Server) {
     /**
      * Make a move on the demo board
      */
-    socket.on('moveRequest', function(data) {
+    socket.on('moveRequest', function(sData) {
       console.log("Move request received...");
-      if(user.board.isMockboardType || !data.move) {
+      if(user.board.isMockboardType || !sData.move) {
         // move was rejected because wrong board type or missing data
         console.log("Move request rejected.");
         socket.emit('moveRejected', user.board.getState(null));
         return;
       }
       
-      var move = user.game.move(data.move);
+      var move = user.game.move(sData.move);
       if(move) {
         // move was accepted
         console.log("Move request accepted.");
-        socket.broadcast.to(user.board.idString()).emit('boardUpdate', user.board.getState(data.move));
+        socket.broadcast.to(user.board.idString()).emit('boardUpdate', user.board.getState(sData.move));
+        
+        // NOTE: here we should be using the check on whether to post from board and mockboard
+        // DISABLED CHECK
+        data.requestMove(data.moveToMoveString(move));
       } else {
         // move was rejected because it was an invalid move
         console.log("Move request rejected.");
@@ -157,6 +161,7 @@ export function socketInit(io: SocketIO.Server) {
       let resetBoard: any = user.board.getState(null);
       resetBoard.isReset = true;
       socket.broadcast.to(user.board.idString()).emit('boardUpdate', resetBoard);
+      data.resetMove();
       
       // We no longer want to emit the boardUpdate to the host, going to force the user to drag the pieces...
       socket.emit('boardUpdate', resetBoard);

@@ -12,11 +12,13 @@ exports.board = {
         state: null
     },
     reset: false,
-    gameState: gameState.uninitialized
+    gameState: gameState.uninitialized,
+    postMockBoardMoves: false
 };
 var moveState = {
     complete: "complete",
-    inProgress: "inProgress"
+    inProgress: "inProgress",
+    ready: "ready"
 };
 function requestMove(moveString) {
     var moveAr = moveString.split('-');
@@ -41,6 +43,11 @@ function requestMove(moveString) {
     return "success";
 }
 exports.requestMove = requestMove;
+function resetMove() {
+    exports.board.move.action = "00-00";
+    exports.board.move.state = moveState.ready;
+}
+exports.resetMove = resetMove;
 function finishMove(moveString) {
     if (moveString == exports.board.move.action) {
         if (exports.board.move.state == moveState.complete) {
@@ -84,3 +91,47 @@ function getGameState() {
     return exports.board.gameState;
 }
 exports.getGameState = getGameState;
+function setPostMockBoardMoves(bool) {
+    exports.board.postMockBoardMoves = bool;
+}
+exports.setPostMockBoardMoves = setPostMockBoardMoves;
+function locationToColRowRep(loc) {
+    var col;
+    switch (loc.charAt(0)) {
+        case 'a':
+            col = 1;
+            break;
+        case 'b':
+            col = 2;
+            break;
+        case 'c':
+            col = 3;
+            break;
+        case 'd':
+            col = 4;
+            break;
+        case 'e':
+            col = 5;
+            break;
+        case 'f':
+            col = 6;
+            break;
+        case 'g':
+            col = 7;
+            break;
+        case 'h':
+            col = 8;
+            break;
+    }
+    return {
+        col: col,
+        row: parseInt(loc.charAt(1))
+    };
+}
+exports.locationToColRowRep = locationToColRowRep;
+function moveToMoveString(move) {
+    var start = locationToColRowRep(move.from);
+    var end = locationToColRowRep(move.to);
+    return start.col + '' + start.row + "-" + end.col + '' + end.row;
+}
+exports.moveToMoveString = moveToMoveString;

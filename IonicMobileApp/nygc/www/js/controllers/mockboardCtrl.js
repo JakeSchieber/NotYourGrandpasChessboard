@@ -852,7 +852,7 @@ function locationToColRowRep(loc) {
     case 'g':
       col = 7;
       break;
-    case 'a':
+    case 'h':
       col = 8;
       break;
   }

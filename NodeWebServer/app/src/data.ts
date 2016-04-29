@@ -28,7 +28,8 @@ export var board = {
     state: null // complete / inProgress <- moveState
   },
   reset: false, // goes high when the board triggers a reset to the server.
-  gameState: gameState.uninitialized
+  gameState: gameState.uninitialized,
+  postMockBoardMoves: false // if true then both game and mockboard moves posted to handleMove
 };
 
 /**
@@ -36,7 +37,8 @@ export var board = {
  */
 var moveState = {
   complete: "complete",
-  inProgress: "inProgress"
+  inProgress: "inProgress",
+  ready: "ready"
 }
 
 /**
@@ -69,6 +71,13 @@ export function requestMove(moveString) {
   board.move.action = moveString;
   board.move.state = moveState.inProgress;
   return "success";
+}
+/**
+ * triggered when the board is reset so that the physical board starts to poll 00-00
+ */
+export function resetMove() {
+  board.move.action = "00-00";
+  board.move.state = moveState.ready;
 }
 
 /**
@@ -144,4 +153,55 @@ export function setReset(high: boolean) {
 
 export function getGameState() {
   return board.gameState;
+}
+
+export function setPostMockBoardMoves(bool: boolean) {
+  board.postMockBoardMoves = bool;
+}
+
+/**
+ * Takes in a board location of form: A6 (letter-number) and converts it into
+ * a location object with 1-index row and col property. 
+ */
+export function locationToColRowRep(loc) {
+  var col;
+  switch(loc.charAt(0)) {
+    case 'a':
+      col = 1;
+      break;
+    case 'b':
+      col = 2;
+      break;
+    case 'c':
+      col = 3;
+      break;
+    case 'd':
+      col = 4;
+      break;
+    case 'e':
+      col = 5;
+      break;
+    case 'f':
+      col = 6;
+      break;
+    case 'g':
+      col = 7;
+      break;
+    case 'h':
+      col = 8;
+      break;
+  }
+  return {
+    col: col,
+    row: parseInt(loc.charAt(1))
+  };
+}
+
+/**
+ * where move is an object with a to and from object
+ */
+export function moveToMoveString(move) {
+  var start = locationToColRowRep(move.from);
+  var end = locationToColRowRep(move.to);
+  return start.col + '' + start.row + "-" + end.col + '' + end.row;
 }

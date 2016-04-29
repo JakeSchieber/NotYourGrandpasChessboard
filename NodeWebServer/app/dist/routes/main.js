@@ -11,6 +11,17 @@ module.exports = function (app) {
         }
         res.send(data.board.move.action ? data.board.move.action : "00-00");
     });
+    app.get('/api/setPostMockBoardMoves/:bool', function (req, res) {
+        if (req.params.bool != "true" && req.params.bool != "false") {
+            res.send("Error-NotPostingTrueOrFalse");
+            return;
+        }
+        data.setPostMockBoardMoves(req.params.bool == "true");
+        res.send("success");
+    });
+    app.get('/api/getPostMockBoardMoves', function (req, res) {
+        res.send(data.board.postMockBoardMoves);
+    });
     app.get('/api/updateBoard/:data', function (req, res) {
         var timestamp = new Date().getTime();
         console.log(timestamp + ": " + req.params.data);

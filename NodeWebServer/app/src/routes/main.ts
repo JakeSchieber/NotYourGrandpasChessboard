@@ -9,7 +9,7 @@ import data = require('./../data');
 
 module.exports = function(app) {
   /**
-   * 
+   * Super sequence, get move and update board capsense readings
    */
   app.get('/api/dopeAFMoveSequence/:data', function(req, res) {
     var timestamp = new Date().getTime();
@@ -19,6 +19,19 @@ module.exports = function(app) {
       console.log("invalid post to bitmap");
     }
     res.send(data.board.move.action ? data.board.move.action : "00-00");
+  });
+  
+  
+  app.get('/api/setPostMockBoardMoves/:bool', function(req, res) {
+    if(req.params.bool != "true" && req.params.bool != "false") {
+      res.send("Error-NotPostingTrueOrFalse");
+      return;
+    }
+    data.setPostMockBoardMoves(req.params.bool == "true");
+    res.send("success");
+  });
+  app.get('/api/getPostMockBoardMoves', function(req, res) {
+    res.send(data.board.postMockBoardMoves);
   });
   
   /**
