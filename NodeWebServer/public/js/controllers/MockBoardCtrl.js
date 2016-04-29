@@ -57,8 +57,11 @@ angular.module('controllers')
     });
 	});
   
+  /**
+   * This the poll which sends us what the current reading on the cap sense is.
+   */
   Socket.on('bluetoothPoll', function(data) {
-    alert("Got em!");
+    //alert("Got em!");
     console.log(data);
   })
   

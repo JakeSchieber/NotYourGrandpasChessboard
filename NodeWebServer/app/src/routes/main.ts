@@ -62,7 +62,7 @@ module.exports = function(app) {
    * NOTE: This returns "00-00" on a fresh game as the board has not yet made any moves.
    */
   app.get('/api/getMove', function(req, res) {
-    res.send(data.board.move.action ? data.board.move.action : "00-00");
+    res.send(data.board.move.action ? data.board.move.action : "00-00-00");
   });
   
   /**

@@ -110,6 +110,8 @@ export function socketInit(io: SocketIO.Server) {
         
         // NOTE: here we should be using the check on whether to post from board and mockboard
         // DISABLED CHECK
+        
+        // now we need to check if the last move was a capture or not... 
         data.requestMove(data.moveToMoveString(move));
       } else {
         // move was rejected because it was an invalid move

@@ -1,6 +1,6 @@
 <ion-modal-view style="z-index: 10;">
   <ion-header-bar class="bar bar-header">
-    <h1 class="title">Welcome!!!</h1>
+    <h1 class="title">Info</h1>
   </ion-header-bar>
   
   <!--
@@ -10,7 +10,7 @@
   -->
   <ion-content>
     <!-- If no game is in progress then just show the welcome message. -->
-    <div ng-if="!gameInProgress">
+    <div ng-if="!gameInProgress && !gameOver">
       <ul class="list">
         <li class="item" style="padding-bottom: 15px;">
           <h2 class="name" style="margin-bottom:12px;">Welcome to NYGC!</h2>
@@ -29,7 +29,7 @@
     </div>
     
     <!-- If a game is in progress-->
-    <div ng-if="gameInProgress">
+    <div ng-if="gameInProgress && !gameOver">
       <ul class="list">
         <li class="item" style="padding-bottom: 15px;">
           <h2 class="name" style="margin-bottom:12px;">Game in progress</h2>
@@ -40,6 +40,22 @@
         <button class="button button-block button-positive" ng-click="closeInfoModal()">
           Continue Game
         </button>
+        <button class="button button-block button-assertive" ng-click="infoModalRestartGame()">
+          Restart Game
+        </button>
+      </div>
+    </div>
+    
+    <!-- If a game is in progress-->
+    <div ng-if="gameOver">
+      <ul class="list">
+        <li class="item" style="padding-bottom: 15px;">
+          <h2 class="name" style="font-size: 130%; margin-bottom:12px;">Game over!</h2>
+          <p class="wrapMe" style="margin-bottom:12px;">Bummer Dude, :'( You seem to have lost the game. Try again by hitting reset below.</p>
+          <p class="wrapMe" style="margin-bottom:12px;">Congratulations! You have won! PANDA!!! Slay some more nerds by restarting the game below.</p>
+        </li>
+      </ul>
+      <div style="padding: 15px;">
         <button class="button button-block button-assertive" ng-click="infoModalRestartGame()">
           Restart Game
         </button>

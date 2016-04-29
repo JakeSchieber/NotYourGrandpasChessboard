@@ -56,14 +56,15 @@ export function requestMove(moveString) {
   
   // validate move
   var moveAr = moveString.split('-');
-  if(moveAr.length != 2) {
+  if(moveAr.length != 3) {
     // check for two blocks on either side of the dash
     return "Error-InvalidMoveStringRequested (1)";
-  } else if(moveAr[0].length != 2 || moveAr[1].length != 2) {
+  } else if(moveAr[0].length != 2 || moveAr[1].length != 2 || moveAr[1].length != 3) {
     // check that each of the moves are composed of 2 numbers
     return "Error-InvalidMoveStringRequested (2)";
   }
   // validate all are numbers and that they are between 1 and 8
+  // Note, we are not validating the capture and color flags
   var mov1a = parseInt(moveAr[0].substring(0, 1));
   var mov1b = parseInt(moveAr[0].substring(1, 2));
   var mov2a = parseInt(moveAr[1].substring(0, 1));
@@ -211,7 +212,13 @@ export function locationToColRowRep(loc) {
 export function moveToMoveString(move) {
   var start = locationToColRowRep(move.from);
   var end = locationToColRowRep(move.to);
+  var captured = (move.captured) ? '1' : '0';
+  // if white made the move then the piece that was taken was black
+  var color = (move.color == 'w') ? '1' : '0';
+  
+  console.log(start.row + '' + start.col + "-" + end.row + '' + end.col + '-' + captured + color);
+  
   // return start.col + '' + start.row + "-" + end.col + '' + end.row;
-  return start.row + '' + start.col + "-" + end.row + '' + end.col;
+  return start.row + '' + start.col + "-" + end.row + '' + end.col + '-' + captured + color;
   // SAM HACK
 }

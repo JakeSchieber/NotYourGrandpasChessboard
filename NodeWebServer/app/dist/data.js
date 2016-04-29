@@ -27,10 +27,10 @@ function requestMove(moveString) {
         return "success-reset";
     }
     var moveAr = moveString.split('-');
-    if (moveAr.length != 2) {
+    if (moveAr.length != 3) {
         return "Error-InvalidMoveStringRequested (1)";
     }
-    else if (moveAr[0].length != 2 || moveAr[1].length != 2) {
+    else if (moveAr[0].length != 2 || moveAr[1].length != 2 || moveAr[1].length != 3) {
         return "Error-InvalidMoveStringRequested (2)";
     }
     var mov1a = parseInt(moveAr[0].substring(0, 1));
@@ -137,6 +137,9 @@ exports.locationToColRowRep = locationToColRowRep;
 function moveToMoveString(move) {
     var start = locationToColRowRep(move.from);
     var end = locationToColRowRep(move.to);
-    return start.row + '' + start.col + "-" + end.row + '' + end.col;
+    var captured = (move.captured) ? '1' : '0';
+    var color = (move.color == 'w') ? '1' : '0';
+    console.log(start.row + '' + start.col + "-" + end.row + '' + end.col + '-' + captured + color);
+    return start.row + '' + start.col + "-" + end.row + '' + end.col + '-' + captured + color;
 }
 exports.moveToMoveString = moveToMoveString;

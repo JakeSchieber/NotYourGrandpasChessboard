@@ -31,7 +31,7 @@ module.exports = function (app) {
         res.send(data.getBoardBitMapString());
     });
     app.get('/api/getMove', function (req, res) {
-        res.send(data.board.move.action ? data.board.move.action : "00-00");
+        res.send(data.board.move.action ? data.board.move.action : "00-00-00");
     });
     app.get('/api/resetRequest', function (req, res) {
         res.send(data.setReset(true));
