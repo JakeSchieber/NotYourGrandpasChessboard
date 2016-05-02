@@ -351,5 +351,6 @@ export function getCounterMax() {
       }
     }
   }
+  console.log(board.counter);
   return (maxCol+1) + '' + (8 - maxRow); // had to flip row logic... no idea why its wrong....
 }

@@ -237,6 +237,7 @@ function getCounterMax() {
             }
         }
     }
+    console.log(exports.board.counter);
     return (maxCol + 1) + '' + (8 - maxRow);
 }
 exports.getCounterMax = getCounterMax;
