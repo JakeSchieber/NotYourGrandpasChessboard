@@ -7,6 +7,8 @@ var gameState = {
 };
 exports.board = {
     bitmap: [],
+    previousBoards: [],
+    numPrevBoardsToKeep: 8,
     move: {
         action: null,
         state: null
@@ -79,6 +81,13 @@ function setBoardBitmap(boardBitMapString) {
     if (bitmap.length != 8) {
         return "Error-StringMustBeADashSeparatedListOf8Numbers";
     }
+    if (!exports.board.numPrevBoardsToKeep || exports.board.numPrevBoardsToKeep > exports.board.previousBoards.length) {
+        exports.board.previousBoards.push(exports.board.bitmap);
+    }
+    else {
+        exports.board.previousBoards.splice(0, 1);
+        exports.board.previousBoards.push(exports.board.bitmap);
+    }
     exports.board.bitmap = bitmap;
     return "success";
 }
@@ -87,27 +96,23 @@ function getBoardBitMapString() {
     return exports.board.bitmap.join('-');
 }
 exports.getBoardBitMapString = getBoardBitMapString;
+function piecesThatAreBorked() {
+}
+exports.piecesThatAreBorked = piecesThatAreBorked;
 var lastSnap;
 var constCount;
 function boardIsSettled() {
-    if (lastSnap) {
-        var notSettled = false;
-        for (var i = 0; i < lastSnap.length; i++) {
-            lastSnap[i] = lastSnap[i] ^ exports.board.bitmap[i];
-            if (lastSnap[i]) {
-                notSettled = true;
+    var boardSettled = true;
+    var rowSettled;
+    for (var i = 1; i < exports.board.previousBoards.length; i++) {
+        rowSettled = true;
+        for (var x = 0; x < exports.board.previousBoards[i].length; x++) {
+            if (exports.board.previousBoards[0][x] != exports.board.previousBoards[i][x]) {
+                rowSettled = false;
             }
         }
-        if (notSettled) {
-            constCount = 0;
-        }
-        else {
-            constCount++;
-        }
-        return constCount > 8;
+        boardSettled = boardSettled && rowSettled;
     }
-    lastSnap = exports.board.bitmap;
-    return false;
 }
 exports.boardIsSettled = boardIsSettled;
 function setReset(high) {

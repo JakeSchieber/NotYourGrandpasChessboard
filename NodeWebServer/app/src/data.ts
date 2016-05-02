@@ -23,6 +23,8 @@ var gameState = {
  */
 export var board = {
   bitmap: [],
+  previousBoards: [], // An array of 10 boards.
+  numPrevBoardsToKeep: 8,
   move: {
     action: null, // "00-00"
     state: null // complete / inProgress <- moveState
@@ -138,7 +140,16 @@ export function setBoardBitmap(boardBitMapString) {
   if(bitmap.length != 8) {
     return "Error-StringMustBeADashSeparatedListOf8Numbers"
   }
+  
+  // every time that we update the boardbitmap we also update the previous board logic.
+  if(!board.numPrevBoardsToKeep || board.numPrevBoardsToKeep > board.previousBoards.length) {
+    board.previousBoards.push(board.bitmap);
+  } else {
+    board.previousBoards.splice(0, 1);
+    board.previousBoards.push(board.bitmap);
+  }
   board.bitmap = bitmap;
+
   // console.log(board.bitmap);
   return "success";
 }
@@ -151,34 +162,39 @@ export function getBoardBitMapString() {
 }
 
 /**
- * returns whehter the current board bitmap is settled (all zeros)
+ * Return a list of which pieces on the board are never deactivating.
  * 
- * NOTE: We are going to need more logic on top of this to actually be able to sample the
- * piece count.
+ * True when the board is settled, but a piece on the board is active.
+ */
+export function piecesThatAreBorked() {
+  //for() {}
+}
+
+/**
+ * returns whehter the current board bitmap is settled constant for the last numPrevBoardsToKeep polls
+ * 
+ * NOTE: This logic is shit and can easily be updated to save many cycles.
  */
 var lastSnap;
 var constCount;
 export function boardIsSettled() {
-  if(lastSnap) {
-    var notSettled = false;
-    for(var i = 0; i < lastSnap.length; i++) {
-      lastSnap[i] = lastSnap[i] ^ board.bitmap[i];
-      if(lastSnap[i]) {
-        notSettled = true;
+  var boardSettled = true;
+  var rowSettled;
+  // compare all boards against zero.
+  for(var i = 1; i < board.previousBoards.length; i++) {
+    rowSettled = true;
+    // compare each row on the board
+    for(var x = 0; x < board.previousBoards[i].length; x++) {
+      // if not equal then not settled.
+      if(board.previousBoards[0][x] != board.previousBoards[i][x]) {
+        rowSettled = false;
       }
     }
-    if(notSettled) {
-      constCount = 0;
-    } else {
-      constCount++;
-    }
-    // 10 samples requires steady state for ~8 polls.
-    return constCount > 8;
+    // boardSettled if true up until this point and if true for that baord.
+    boardSettled = boardSettled && rowSettled;
   }
-  // init to lastest string.
-  lastSnap = board.bitmap;
-  return false;
 }
+
 /**
  * Set high by the game board, set low when handled by the game server.
  */
