@@ -61,24 +61,26 @@ export function socketInit(io: SocketIO.Server) {
       // console.log(timestamp + ": " + data.getBoardBitMapString());
       // console.log("settled: " + data.boardIsSettled());
       // console.log("state: " + state);
-      console.log("Enterring state logic.");
+      // console.log("Enterring state logic.");
       switch (data.board.state) {
         // waiting is currently just a fall through state. This soulbe disabled when not sampling for moves.
         case data.states.waiting:
           // On init wait till steady state, this should be defaulted out when the logic to place has arisen.
           if(data.boardIsSuperSettled()) {
             data.setState(data.states.waitingToPick);
+            console.log("leaving waiting");
           }
         case data.states.waitingToPick:
           // Start couning when the board gets messed with.
           if(!data.boardIsSuperSettled()) {
             data.setState(data.states.picking);
             data.resetCounter();
+            console.log("leaving waiting to pick");
           }
           break;
         case data.states.picking:
           if(data.boardIsSuperSettled()) {
-            console.log("Pieve pick up action.");
+            console.log("Piece pick up action.");
             console.log("col,row: " + data.getCounterMax());
             // resetCounter();
             data.setState(data.states.waitingToPlace);
@@ -90,6 +92,7 @@ export function socketInit(io: SocketIO.Server) {
           if(!data.boardIsSuperSettled()) {
             data.setState(data.states.placing);
             data.resetCounter();
+            console.log("leaving waiting to place");
           }
           break;
         case data.states.placing:

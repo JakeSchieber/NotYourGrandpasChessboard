@@ -25,21 +25,22 @@ function socketInit(io) {
                 data.setState(data.states.waiting);
                 data.resetCounter();
             }
-            console.log("Enterring state logic.");
             switch (data.board.state) {
                 case data.states.waiting:
                     if (data.boardIsSuperSettled()) {
                         data.setState(data.states.waitingToPick);
+                        console.log("leaving waiting");
                     }
                 case data.states.waitingToPick:
                     if (!data.boardIsSuperSettled()) {
                         data.setState(data.states.picking);
                         data.resetCounter();
+                        console.log("leaving waiting to pick");
                     }
                     break;
                 case data.states.picking:
                     if (data.boardIsSuperSettled()) {
-                        console.log("Pieve pick up action.");
+                        console.log("Piece pick up action.");
                         console.log("col,row: " + data.getCounterMax());
                         data.setState(data.states.waitingToPlace);
                     }
@@ -51,6 +52,7 @@ function socketInit(io) {
                     if (!data.boardIsSuperSettled()) {
                         data.setState(data.states.placing);
                         data.resetCounter();
+                        console.log("leaving waiting to place");
                     }
                     break;
                 case data.states.placing:
