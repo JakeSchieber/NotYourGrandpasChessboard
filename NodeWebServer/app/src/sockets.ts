@@ -45,14 +45,14 @@ export function socketInit(io: SocketIO.Server) {
     /**
      * All board connection logic is going to go here for now...
      */
-    var counter, state;
+    var counter;
     setInterval(function() {
       if(data.board.numPrevBoardsToKeep > data.board.previousBoards.length) {
         // do nothing if the board has not been initted
         console.log("board not initted.");
         return;
       }
-      if(!state) {
+      if(!data.board.state) {
         data.setState(data.states.waiting);
         resetCounter();
       }
@@ -62,7 +62,7 @@ export function socketInit(io: SocketIO.Server) {
       // console.log("settled: " + data.boardIsSettled());
       // console.log("state: " + state);
       
-      switch (state) {
+      switch (data.board.state) {
         // waiting is currently just a fall through state. This soulbe disabled when not sampling for moves.
         case data.states.waiting:
         case data.states.waitingToPick:

@@ -15,17 +15,17 @@ function socketInit(io) {
                 bitMapString = data.getBoardBitMapString();
             }
         }, 100);
-        var counter, state;
+        var counter;
         setInterval(function () {
             if (data.board.numPrevBoardsToKeep > data.board.previousBoards.length) {
                 console.log("board not initted.");
                 return;
             }
-            if (!state) {
+            if (!data.board.state) {
                 data.setState(data.states.waiting);
                 resetCounter();
             }
-            switch (state) {
+            switch (data.board.state) {
                 case data.states.waiting:
                 case data.states.waitingToPick:
                     if (!data.boardIsSettled()) {
