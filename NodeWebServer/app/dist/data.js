@@ -98,7 +98,13 @@ function boardIsSettled() {
                 notSettled = true;
             }
         }
-        return !notSettled;
+        if (notSettled) {
+            constCount = 0;
+        }
+        else {
+            constCount++;
+        }
+        return constCount > 8;
     }
     lastSnap = exports.board.bitmap;
     return false;

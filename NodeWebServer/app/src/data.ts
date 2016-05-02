@@ -167,7 +167,13 @@ export function boardIsSettled() {
         notSettled = true;
       }
     }
-    return !notSettled;
+    if(notSettled) {
+      constCount = 0;
+    } else {
+      constCount++;
+    }
+    // 10 samples requires steady state for ~8 polls.
+    return constCount > 8;
   }
   // init to lastest string.
   lastSnap = board.bitmap;
