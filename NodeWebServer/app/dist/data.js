@@ -228,7 +228,7 @@ function incrementCounter() {
 exports.incrementCounter = incrementCounter;
 function getCounterMax() {
     console.log(exports.board.counter);
-    var maxRow, maxCol;
+    var maxRow = 0, maxCol = 0;
     for (var i = 0; i < 8; i++) {
         for (var x = 0; x < 8; x++) {
             if (!maxRow || !maxCol || (exports.board.counter[maxRow][maxCol] < exports.board.counter[i][x])) {
