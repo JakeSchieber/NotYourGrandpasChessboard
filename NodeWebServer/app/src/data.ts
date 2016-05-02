@@ -218,6 +218,27 @@ export function boardIsSettled() {
 }
 
 /**
+ * Returns true only when all zeros is achieved on the board map.
+ */
+export function boardIsSuperSettled() {
+  // cant returned settled board until we have at least the required amount of samples.
+  if(board.numPrevBoardsToKeep > board.previousBoards.length) {
+    return false;
+  }
+  var boardSettled = true;
+  for(var i = 1; i < board.previousBoards.length; i++) {
+    // compare each row on the board
+    for(var x = 0; x < board.previousBoards[i].length; x++) {
+      // if not equal then not settled.
+      if(board.previousBoards[i][x]) {
+        boardSettled = false;
+      }
+    }
+  }
+  return boardSettled;
+}
+
+/**
  * Set high by the game board, set low when handled by the game server.
  */
 export function setReset(high: boolean) {
@@ -307,7 +328,6 @@ export function resetCounter() {
   ];
 }
 export function incrementCounter() {
-  console.log(board.counter);
   for(var i = 0; i < board.bitmap.length; i++) {
     for(var x = 0; x < 8; x++) {
       if((board.bitmap[i] >> x) & 1) {
@@ -321,10 +341,11 @@ export function incrementCounter() {
  * Returns the most polled space in the counter.
  */
 export function getCounterMax() {
-  var maxRow, maxCol, maxVal;
+  console.log(board.counter);
+  var maxRow, maxCol;
   for(var i = 0; i < 8; i++) {
     for(var x = 0; x < 8; x++) {
-      if(!maxVal || board.counter[maxRow][maxCol] < board.counter[i][x]) {
+      if(!maxRow || !maxCol || (board.counter[maxRow][maxCol] < board.counter[i][x])) {
         maxRow = i;
         maxCol = x;
       }

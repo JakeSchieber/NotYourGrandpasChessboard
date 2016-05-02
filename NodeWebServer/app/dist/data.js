@@ -132,6 +132,21 @@ function boardIsSettled() {
     return boardSettled;
 }
 exports.boardIsSettled = boardIsSettled;
+function boardIsSuperSettled() {
+    if (exports.board.numPrevBoardsToKeep > exports.board.previousBoards.length) {
+        return false;
+    }
+    var boardSettled = true;
+    for (var i = 1; i < exports.board.previousBoards.length; i++) {
+        for (var x = 0; x < exports.board.previousBoards[i].length; x++) {
+            if (exports.board.previousBoards[i][x]) {
+                boardSettled = false;
+            }
+        }
+    }
+    return boardSettled;
+}
+exports.boardIsSuperSettled = boardIsSuperSettled;
 function setReset(high) {
     exports.board.reset = high;
     return "success";
@@ -202,7 +217,6 @@ function resetCounter() {
 }
 exports.resetCounter = resetCounter;
 function incrementCounter() {
-    console.log(exports.board.counter);
     for (var i = 0; i < exports.board.bitmap.length; i++) {
         for (var x = 0; x < 8; x++) {
             if ((exports.board.bitmap[i] >> x) & 1) {
@@ -213,10 +227,11 @@ function incrementCounter() {
 }
 exports.incrementCounter = incrementCounter;
 function getCounterMax() {
-    var maxRow, maxCol, maxVal;
+    console.log(exports.board.counter);
+    var maxRow, maxCol;
     for (var i = 0; i < 8; i++) {
         for (var x = 0; x < 8; x++) {
-            if (!maxVal || exports.board.counter[maxRow][maxCol] < exports.board.counter[i][x]) {
+            if (!maxRow || !maxCol || (exports.board.counter[maxRow][maxCol] < exports.board.counter[i][x])) {
                 maxRow = i;
                 maxCol = x;
             }
