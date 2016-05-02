@@ -14,8 +14,15 @@ module.exports = function(app) {
    * Currently we print out when we receive data.
    */
   app.get('/api/dopeAFMoveSequence/:data', function(req, res) {
-    var timestamp = new Date().getTime();
+    //var timestamp = new Date().getTime();
     // console.log(timestamp + ": " + req.params.data);
+    
+    var timestamp = new Date().getTime();
+    console.log(timestamp + ": " + data.getBoardBitMapString());
+    console.log("settled: " + data.boardIsSettled());
+    console.log("state: " + data.board.state);
+      
+      
     // set the new board bitmap and console an error if not a success
     if(data.setBoardBitmap(req.params.data).indexOf("success") < 0) {
       console.log("invalid post to bitmap");

@@ -15,8 +15,20 @@ exports.board = {
     },
     reset: false,
     gameState: gameState.uninitialized,
-    postMockBoardMoves: false
+    postMockBoardMoves: false,
+    state: null
 };
+exports.states = {
+    waiting: "waiting",
+    picking: "picking",
+    placing: "placing",
+    waitingToPick: "waitingToPick",
+    waitingToPlace: "waitingToPlace"
+};
+function setState(newState) {
+    exports.board.state = newState;
+}
+exports.setState = setState;
 var moveState = {
     complete: "complete",
     inProgress: "inProgress",

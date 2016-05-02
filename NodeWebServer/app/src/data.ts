@@ -31,8 +31,23 @@ export var board = {
   },
   reset: false, // goes high when the board triggers a reset to the server.
   gameState: gameState.uninitialized,
-  postMockBoardMoves: false // if true then both game and mockboard moves posted to handleMove
+  postMockBoardMoves: false, // if true then both game and mockboard moves posted to handleMove
+  state: null
 };
+
+/**
+ * Board States
+ */
+export var states = {
+  waiting: "waiting",
+  picking: "picking",
+  placing: "placing",
+  waitingToPick: "waitingToPick",
+  waitingToPlace: "waitingToPlace"
+}
+export function setState(newState) {
+  board.state = newState;
+}
 
 /**
  * Possible states that a move can be in, either in progress or completed.

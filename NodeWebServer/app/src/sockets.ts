@@ -45,13 +45,6 @@ export function socketInit(io: SocketIO.Server) {
     /**
      * All board connection logic is going to go here for now...
      */
-    var states = {
-      waiting: "waiting",
-      picking: "picking",
-      placing: "placing",
-      waitingToPick: "waitingToPick",
-      waitingToPlace: "waitingToPlace"
-    }
     var counter, state;
     setInterval(function() {
       if(data.board.numPrevBoardsToKeep > data.board.previousBoards.length) {
@@ -60,47 +53,47 @@ export function socketInit(io: SocketIO.Server) {
         return;
       }
       if(!state) {
-        state = states.waiting;
+        data.setState(data.states.waiting);
         resetCounter();
       }
       
-      var timestamp = new Date().getTime();
-      console.log(timestamp + ": " + data.getBoardBitMapString());
-      console.log("settled: " + data.boardIsSettled());
-      console.log("state: " + state);
+      // var timestamp = new Date().getTime();
+      // console.log(timestamp + ": " + data.getBoardBitMapString());
+      // console.log("settled: " + data.boardIsSettled());
+      // console.log("state: " + state);
       
       switch (state) {
         // waiting is currently just a fall through state. This soulbe disabled when not sampling for moves.
-        case states.waiting:
-        case states.waitingToPick:
+        case data.states.waiting:
+        case data.states.waitingToPick:
           // Start couning when the board gets messed with.
           if(!data.boardIsSettled()) {
-            state = states.picking;
+            data.setState(data.states.picking);
             resetCounter();
           }
           break;
-        case states.picking:
+        case data.states.picking:
           if(data.boardIsSettled()) {
             console.log("Pieve pick up action.");
             console.log("col,row: " + getMax());
             resetCounter();
-            state = states.placing;
+            data.setState(data.states.waitingToPlace);
           } else {
             incrementCounter();
           }
           break;
-        case states.waitingToPlace:
+        case data.states.waitingToPlace:
           if(!data.boardIsSettled()) {
-            state = states.placing;
+            data.setState(data.states.placing);
             resetCounter();
           }
           break;
-        case states.placing:
+        case data.states.placing:
           if(data.boardIsSettled()) {
             console.log("Piece set down action.");
             console.log("col,row: " + getMax());
             resetCounter();
-            state = states.waiting;
+            data.setState(data.states.waiting);
           } else {
             incrementCounter();
           }
