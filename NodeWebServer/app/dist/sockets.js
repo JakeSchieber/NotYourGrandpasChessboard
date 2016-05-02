@@ -26,6 +26,9 @@ function socketInit(io) {
             }
             switch (data.board.state) {
                 case data.states.waiting:
+                    if (data.boardIsSettled()) {
+                        data.setState(data.states.waitingToPick);
+                    }
                 case data.states.waitingToPick:
                     if (!data.boardIsSettled()) {
                         data.setState(data.states.picking);

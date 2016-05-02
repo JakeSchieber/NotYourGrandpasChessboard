@@ -65,6 +65,10 @@ export function socketInit(io: SocketIO.Server) {
       switch (data.board.state) {
         // waiting is currently just a fall through state. This soulbe disabled when not sampling for moves.
         case data.states.waiting:
+          // On init wait till steady state, this should be defaulted out when the logic to place has arisen.
+          if(data.boardIsSettled()) {
+            data.setState(data.states.waitingToPick);
+          }
         case data.states.waitingToPick:
           // Start couning when the board gets messed with.
           if(!data.boardIsSettled()) {
