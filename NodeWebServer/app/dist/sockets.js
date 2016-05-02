@@ -20,7 +20,7 @@ function socketInit(io) {
             picking: "picking",
             placing: "placing"
         };
-        var state;
+        var counter, state;
         setInterval(function () {
             if (data.board.numPrevBoardsToKeep > data.board.previousBoards.length) {
                 console.log("board not initted.");
@@ -59,8 +59,10 @@ function socketInit(io) {
                         incrementCounter();
                     }
             }
+            var timestamp = new Date().getTime();
+            console.log(timestamp + ": " + data.getBoardBitMapString());
+            console.log(data.boardIsSettled());
         }, 1000);
-        var counter;
         function resetCounter() {
             counter = [
                 [0, 0, 0, 0, 0, 0, 0, 0],
@@ -86,8 +88,7 @@ function socketInit(io) {
             var maxRow, maxCol, maxVal;
             for (var i = 0; i < 8; i++) {
                 for (var x = 0; x < 8; x++) {
-                    if (!maxVal || maxVal < counter[i][x]) {
-                        maxVal = counter[i][x];
+                    if (!maxVal || counter[maxRow][maxCol] < counter[i][x]) {
                         maxRow = i;
                         maxCol = x;
                     }
