@@ -167,7 +167,7 @@ export function getBoardBitMapString() {
  * True when the board is settled, but a piece on the board is active.
  */
 export function piecesThatAreBorked() {
-  //for() {}
+  // for() {}
 }
 
 /**
@@ -178,6 +178,11 @@ export function piecesThatAreBorked() {
 var lastSnap;
 var constCount;
 export function boardIsSettled() {
+  // cant returned settled board until we have at least the required amount of samples.
+  if(board.numPrevBoardsToKeep > board.previousBoards.length) {
+    return false;
+  }
+  
   var boardSettled = true;
   var rowSettled;
   // compare all boards against zero.

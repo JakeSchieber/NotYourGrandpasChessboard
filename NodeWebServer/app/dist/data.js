@@ -102,6 +102,9 @@ exports.piecesThatAreBorked = piecesThatAreBorked;
 var lastSnap;
 var constCount;
 function boardIsSettled() {
+    if (exports.board.numPrevBoardsToKeep > exports.board.previousBoards.length) {
+        return false;
+    }
     var boardSettled = true;
     var rowSettled;
     for (var i = 1; i < exports.board.previousBoards.length; i++) {

@@ -51,8 +51,8 @@
       <ul class="list">
         <li class="item" style="padding-bottom: 15px;">
           <h2 class="name" style="font-size: 130%; margin-bottom:12px;">Game over!</h2>
-          <p class="wrapMe" style="margin-bottom:12px;">Bummer Dude, :'( You seem to have lost the game. Try again by hitting reset below.</p>
-          <p class="wrapMe" style="margin-bottom:12px;">Congratulations! You have won! PANDA!!! Slay some more nerds by restarting the game below.</p>
+          <p class="wrapMe" ng-if="!win" style="margin-bottom:12px;">Bummer Dude, :'( You seem to have lost the game. Try again by hitting reset below.</p>
+          <p class="wrapMe" ng-if="win" style="margin-bottom:12px;">Congratulations! You have won! PANDA!!! Slay some more nerds by restarting the game below.</p>
         </li>
       </ul>
       <div style="padding: 15px;">

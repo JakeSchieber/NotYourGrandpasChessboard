@@ -15,12 +15,89 @@ function socketInit(io) {
                 bitMapString = data.getBoardBitMapString();
             }
         }, 100);
-        var state = false;
+        var states = {
+            waiting: "waiting",
+            picking: "picking",
+            placing: "placing"
+        };
+        var state = states.waiting;
+        var counter;
         setInterval(function () {
+            if (data.board.bitmap = []) {
+                console.log("board not initted.");
+                return;
+            }
+            if (!state) {
+                state = states.waiting;
+                resetCounter();
+            }
+            switch (state) {
+                case states.waiting:
+                    if (!data.boardIsSettled()) {
+                        state = states.picking;
+                    }
+                    break;
+                case states.picking:
+                    if (data.boardIsSettled()) {
+                        console.log("Pieve pick up action.");
+                        console.log(getMax);
+                        resetCounter();
+                        state = states.placing;
+                    }
+                    else {
+                        incrementCounter();
+                    }
+                    break;
+                case states.placing:
+                    if (data.boardIsSettled()) {
+                        console.log("Piece set down action.");
+                        console.log(getMax);
+                        resetCounter();
+                        state = states.waiting;
+                    }
+                    else {
+                        incrementCounter();
+                    }
+            }
             var timestamp = new Date().getTime();
             console.log(timestamp + ": " + data.getBoardBitMapString());
             console.log(data.boardIsSettled());
         }, 1000);
+        var counter;
+        function resetCounter() {
+            counter = [
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0]
+            ];
+        }
+        function incrementCounter() {
+            for (var i = 0; i < data.board.bitmap.length; i++) {
+                for (var x = 0; x < 8; x++) {
+                    if ((data.board.bitmap[i] >> x) & 1) {
+                        counter[i][7 - x]++;
+                    }
+                }
+            }
+        }
+        function getMax() {
+            var maxRow, maxCol, maxVal;
+            for (var i = 0; i < 8; i++) {
+                for (var x = 0; x < 8; x++) {
+                    if (!maxVal || maxVal < counter[i][x]) {
+                        maxVal = counter[i][x];
+                        maxRow = i;
+                        maxCol = x;
+                    }
+                }
+            }
+            return maxCol + '' + maxRow;
+        }
         var user = new User();
         socket.on('setToGameDemo', function () {
             console.log("setting to demo board");

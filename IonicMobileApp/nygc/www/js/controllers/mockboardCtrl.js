@@ -224,7 +224,11 @@ angular.module('nygc.controllers')
       // update the chess.js logic for the game. (Could add moves, but this is easier.)
       $scope.activeChessGame = new Chess(data.boardFen);
       
-      if(isGameOver()) {
+      // NOTE: Need to update the board before you check the logic, else the opponent wont know why he won/loss
+      // issue request to update the mockboard on the website.
+      Socket.emit("forceUpdateMockboard", data);
+      
+      if(isGameOver(false)) {
         // if game is over then we are done.
         return;
       }
@@ -242,8 +246,7 @@ angular.module('nygc.controllers')
       // NOTE: In real life, we need to now wait here until the motor is finished moving before
       // we can start issuing future move requests.
       
-      // issue request to update the mockboard on the website.
-      Socket.emit("forceUpdateMockboard", data);
+      
     });
 	});
   
@@ -527,7 +530,7 @@ angular.module('nygc.controllers')
       
       $scope.$apply(function() {
         $scope.switchTurns();
-        if(isGameOver()) {
+        if(isGameOver(true)) {
           // if game is over then we are done.
           return;
         }
@@ -542,10 +545,14 @@ angular.module('nygc.controllers')
    * 
    * NOTE: Relies on the scoped active chess board.
    */
-  function isGameOver() {
+  function isGameOver(checkIsFromPlayer) {
+    console.log("test");
+    console.log(checkIsFromPlayer);
     if($scope.activeChessGame.game_over()) {
       $scope.gameOver = true;
-      $scope.win = !(($scope.placing == $scope.me) && $scope.activeChessGame.in_checkmate());
+      $scope.win = checkIsFromPlayer;
+      // this logic isnt working, we are just going to see who is calling the check now.
+      // $scope.win = !(($scope.placing == $scope.me) && $scope.activeChessGame.in_checkmate());
       $scope.openInfoModal();
       return true;
     }
