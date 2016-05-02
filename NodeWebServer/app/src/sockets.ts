@@ -54,7 +54,7 @@ export function socketInit(io: SocketIO.Server) {
       }
       if(!data.board.state) {
         data.setState(data.states.waiting);
-        resetCounter();
+        // resetCounter();
       }
       
       // var timestamp = new Date().getTime();
@@ -76,7 +76,7 @@ export function socketInit(io: SocketIO.Server) {
           if(data.boardIsSettled()) {
             console.log("Pieve pick up action.");
             console.log("col,row: " + getMax());
-            resetCounter();
+            // resetCounter();
             data.setState(data.states.waitingToPlace);
           } else {
             incrementCounter();
@@ -92,7 +92,7 @@ export function socketInit(io: SocketIO.Server) {
           if(data.boardIsSettled()) {
             console.log("Piece set down action.");
             console.log("col,row: " + getMax());
-            resetCounter();
+            // resetCounter();
             data.setState(data.states.waiting);
           } else {
             incrementCounter();
@@ -101,6 +101,7 @@ export function socketInit(io: SocketIO.Server) {
     }, 1000);
     function resetCounter() {
       counter = [
+        [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0],

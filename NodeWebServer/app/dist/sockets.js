@@ -23,7 +23,6 @@ function socketInit(io) {
             }
             if (!data.board.state) {
                 data.setState(data.states.waiting);
-                resetCounter();
             }
             switch (data.board.state) {
                 case data.states.waiting:
@@ -37,7 +36,6 @@ function socketInit(io) {
                     if (data.boardIsSettled()) {
                         console.log("Pieve pick up action.");
                         console.log("col,row: " + getMax());
-                        resetCounter();
                         data.setState(data.states.waitingToPlace);
                     }
                     else {
@@ -54,7 +52,6 @@ function socketInit(io) {
                     if (data.boardIsSettled()) {
                         console.log("Piece set down action.");
                         console.log("col,row: " + getMax());
-                        resetCounter();
                         data.setState(data.states.waiting);
                     }
                     else {
@@ -64,6 +61,7 @@ function socketInit(io) {
         }, 1000);
         function resetCounter() {
             counter = [
+                [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
