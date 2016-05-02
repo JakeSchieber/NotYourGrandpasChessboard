@@ -10,10 +10,12 @@ import data = require('./../data');
 module.exports = function(app) {
   /**
    * Super sequence, get move and update board capsense readings
+   * 
+   * Currently we print out when we receive data.
    */
   app.get('/api/dopeAFMoveSequence/:data', function(req, res) {
     var timestamp = new Date().getTime();
-    console.log(timestamp + ": " + req.params.data);
+    // console.log(timestamp + ": " + req.params.data);
     // set the new board bitmap and console an error if not a success
     if(data.setBoardBitmap(req.params.data).indexOf("success") < 0) {
       console.log("invalid post to bitmap");

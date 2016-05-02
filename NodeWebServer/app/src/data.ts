@@ -151,6 +151,16 @@ export function getBoardBitMapString() {
 }
 
 /**
+ * returns whehter the current board bitmap is settled (all zeros)
+ */
+export function boardIsSettled() {
+  var hold = 0;
+  for(var i = 0; i < board.bitmap.length; i++) {
+    hold = hold | board.bitmap[i];
+  }
+  return hold == 0;
+}
+/**
  * Set high by the game board, set low when handled by the game server.
  */
 export function setReset(high: boolean) {
@@ -222,3 +232,14 @@ export function moveToMoveString(move) {
   return start.row + '' + start.col + "-" + end.row + '' + end.col + '-' + captured + color;
   // SAM HACK
 }
+
+
+/**
+ * All board connection logic is going to go here for now...
+ */
+var state = false;
+setInterval(function() {
+  var timestamp = new Date().getTime();
+  console.log(timestamp + ": " + getBoardBitMapString());
+  console.log(boardIsSettled());
+}, 1000);
