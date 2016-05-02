@@ -23,6 +23,7 @@ function socketInit(io) {
             }
             if (!data.board.state) {
                 data.setState(data.states.waiting);
+                resetCounter();
             }
             console.log("Enterring state logic.");
             switch (data.board.state) {
@@ -72,11 +73,11 @@ function socketInit(io) {
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0]
             ];
         }
         function incrementCounter() {
+            console.log(counter);
             for (var i = 0; i < data.board.bitmap.length; i++) {
                 for (var x = 0; x < 8; x++) {
                     if ((data.board.bitmap[i] >> x) & 1) {
