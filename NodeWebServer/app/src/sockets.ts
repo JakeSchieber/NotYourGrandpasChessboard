@@ -61,6 +61,12 @@ export function socketInit(io: SocketIO.Server) {
         state = states.waiting;
         resetCounter();
       }
+      
+      var timestamp = new Date().getTime();
+      console.log(timestamp + ": " + data.getBoardBitMapString());
+      console.log("settled: " + data.boardIsSettled());
+      console.log("state: " + state);
+      
       switch (state) {
         case states.waiting:
           // Start couning when the board gets messed with.
@@ -89,9 +95,6 @@ export function socketInit(io: SocketIO.Server) {
             incrementCounter();
           }
       }
-      var timestamp = new Date().getTime();
-      console.log(timestamp + ": " + data.getBoardBitMapString());
-      console.log(data.boardIsSettled());
     }, 1000);
     function resetCounter() {
       counter = [

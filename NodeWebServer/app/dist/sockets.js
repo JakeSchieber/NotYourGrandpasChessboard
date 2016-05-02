@@ -30,6 +30,10 @@ function socketInit(io) {
                 state = states.waiting;
                 resetCounter();
             }
+            var timestamp = new Date().getTime();
+            console.log(timestamp + ": " + data.getBoardBitMapString());
+            console.log("settled: " + data.boardIsSettled());
+            console.log("state: " + state);
             switch (state) {
                 case states.waiting:
                     if (!data.boardIsSettled()) {
@@ -59,9 +63,6 @@ function socketInit(io) {
                         incrementCounter();
                     }
             }
-            var timestamp = new Date().getTime();
-            console.log(timestamp + ": " + data.getBoardBitMapString());
-            console.log(data.boardIsSettled());
         }, 1000);
         function resetCounter() {
             counter = [
