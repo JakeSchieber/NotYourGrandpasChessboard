@@ -351,5 +351,5 @@ export function getCounterMax() {
       }
     }
   }
-  return (maxCol+1) + '' + (maxRow+1);
+  return (maxCol+1) + '' + (8 - maxRow); // had to flip row logic... no idea why its wrong....
 }

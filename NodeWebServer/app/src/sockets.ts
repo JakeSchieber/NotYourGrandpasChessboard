@@ -36,7 +36,7 @@ export function socketInit(io: SocketIO.Server) {
         // if the board bitmap string has changed then we need to process a diff!!!
         // NOTE: This logic is going to get harder now that we have to work off of diffs and not necessarily
         //     guaranteed placement.
-        console.log("The value has changed!!!!");
+        // console.log("The value has changed!!!!");
         socket.emit('bluetoothPoll', { newData: data.board.bitmap});
         bitMapString = data.getBoardBitMapString();
       }
@@ -80,14 +80,16 @@ export function socketInit(io: SocketIO.Server) {
           break;
         case data.states.picking:
           if(data.boardIsSuperSettled()) {
-            console.log("Piece pick up action.");
+            console.log("Piece  action.");
             console.log("col,row: " + data.getCounterMax());
             // resetCounter();
-            data.setState(data.states.waitingToPlace);
+            data.setState(data.states.waiting);
+            // data.setState(data.states.waitingToPlace);
           } else {
             data.incrementCounter();
           }
           break;
+          /*
         case data.states.waitingToPlace:
           if(!data.boardIsSuperSettled()) {
             data.setState(data.states.placing);
@@ -103,7 +105,7 @@ export function socketInit(io: SocketIO.Server) {
             data.setState(data.states.waiting);
           } else {
             data.incrementCounter();
-          }
+          }*/
       }
     }, 1000);
     

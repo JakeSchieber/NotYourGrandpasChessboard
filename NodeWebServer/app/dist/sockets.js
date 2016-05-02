@@ -10,7 +10,6 @@ function socketInit(io) {
         var bitMapString = data.getBoardBitMapString();
         setInterval(function () {
             if (bitMapString != data.getBoardBitMapString()) {
-                console.log("The value has changed!!!!");
                 socket.emit('bluetoothPoll', { newData: data.board.bitmap });
                 bitMapString = data.getBoardBitMapString();
             }
@@ -40,30 +39,14 @@ function socketInit(io) {
                     break;
                 case data.states.picking:
                     if (data.boardIsSuperSettled()) {
-                        console.log("Piece pick up action.");
-                        console.log("col,row: " + data.getCounterMax());
-                        data.setState(data.states.waitingToPlace);
-                    }
-                    else {
-                        data.incrementCounter();
-                    }
-                    break;
-                case data.states.waitingToPlace:
-                    if (!data.boardIsSuperSettled()) {
-                        data.setState(data.states.placing);
-                        data.resetCounter();
-                        console.log("leaving waiting to place");
-                    }
-                    break;
-                case data.states.placing:
-                    if (data.boardIsSuperSettled()) {
-                        console.log("Piece set down action.");
+                        console.log("Piece  action.");
                         console.log("col,row: " + data.getCounterMax());
                         data.setState(data.states.waiting);
                     }
                     else {
                         data.incrementCounter();
                     }
+                    break;
             }
         }, 1000);
         var user = new User();
