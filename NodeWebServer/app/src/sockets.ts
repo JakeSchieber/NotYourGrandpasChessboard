@@ -72,7 +72,7 @@ export function socketInit(io: SocketIO.Server) {
         case states.picking:
           if(data.boardIsSettled()) {
             console.log("Pieve pick up action.");
-            console.log(getMax);
+            console.log("col,row: " + getMax());
             resetCounter();
             state = states.placing;
           } else {
@@ -82,16 +82,16 @@ export function socketInit(io: SocketIO.Server) {
         case states.placing:
           if(data.boardIsSettled()) {
             console.log("Piece set down action.");
-            console.log(getMax);
+            console.log("col,row: " + getMax());
             resetCounter();
             state = states.waiting;
           } else {
             incrementCounter();
           }
       }
-      var timestamp = new Date().getTime();
-      console.log(timestamp + ": " + data.getBoardBitMapString());
-      console.log(data.boardIsSettled());
+      // var timestamp = new Date().getTime();
+      // console.log(timestamp + ": " + data.getBoardBitMapString());
+      // console.log(data.boardIsSettled());
     }, 1000);
 
     var counter;
