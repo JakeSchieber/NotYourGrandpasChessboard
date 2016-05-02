@@ -6,7 +6,7 @@ module.exports = function (app) {
     app.get('/api/dopeAFMoveSequence/:data', function (req, res) {
         var timestamp = new Date().getTime();
         console.log(timestamp + ": " + data.getBoardBitMapString());
-        console.log("settled: " + data.boardIsSettled());
+        console.log("settled: " + data.boardIsSuperSettled());
         console.log("state: " + data.board.state);
         if (data.setBoardBitmap(req.params.data).indexOf("success") < 0) {
             console.log("invalid post to bitmap");
