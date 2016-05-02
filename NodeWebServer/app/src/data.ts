@@ -351,5 +351,5 @@ export function getCounterMax() {
       }
     }
   }
-  return maxCol + '' + maxRow;
+  return (maxCol+1) + '' + (maxRow+1);
 }
