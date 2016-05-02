@@ -193,6 +193,7 @@ export function boardIsSettled() {
     // boardSettled if true up until this point and if true for that baord.
     boardSettled = boardSettled && rowSettled;
   }
+  return boardSettled;
 }
 
 /**

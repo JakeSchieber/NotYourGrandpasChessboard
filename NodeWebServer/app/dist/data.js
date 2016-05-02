@@ -113,6 +113,7 @@ function boardIsSettled() {
         }
         boardSettled = boardSettled && rowSettled;
     }
+    return boardSettled;
 }
 exports.boardIsSettled = boardIsSettled;
 function setReset(high) {
