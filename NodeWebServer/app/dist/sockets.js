@@ -23,7 +23,7 @@ function socketInit(io) {
         var state = states.waiting;
         var counter;
         setInterval(function () {
-            if (data.board.bitmap = []) {
+            if (data.board.bitmap == []) {
                 console.log("board not initted.");
                 return;
             }

@@ -53,7 +53,7 @@ export function socketInit(io: SocketIO.Server) {
     var state = states.waiting;
     var counter;
     setInterval(function() {
-      if(data.board.bitmap = []) {
+      if(data.board.bitmap == []) {
         // do nothing if the board has not been initted
         console.log("board not initted.");
         return;
