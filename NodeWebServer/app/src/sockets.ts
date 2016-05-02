@@ -48,7 +48,9 @@ export function socketInit(io: SocketIO.Server) {
     var states = {
       waiting: "waiting",
       picking: "picking",
-      placing: "placing"
+      placing: "placing",
+      waitingToPick: "waitingToPick",
+      waitingToPlace: "waitingToPlace"
     }
     var counter, state;
     setInterval(function() {
@@ -68,7 +70,9 @@ export function socketInit(io: SocketIO.Server) {
       console.log("state: " + state);
       
       switch (state) {
+        // waiting is currently just a fall through state. This soulbe disabled when not sampling for moves.
         case states.waiting:
+        case states.waitingToPick:
           // Start couning when the board gets messed with.
           if(!data.boardIsSettled()) {
             state = states.picking;
@@ -83,6 +87,12 @@ export function socketInit(io: SocketIO.Server) {
             state = states.placing;
           } else {
             incrementCounter();
+          }
+          break;
+        case states.waitingToPlace:
+          if(!data.boardIsSettled()) {
+            state = states.placing;
+            resetCounter();
           }
           break;
         case states.placing:

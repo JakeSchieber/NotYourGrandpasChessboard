@@ -18,7 +18,9 @@ function socketInit(io) {
         var states = {
             waiting: "waiting",
             picking: "picking",
-            placing: "placing"
+            placing: "placing",
+            waitingToPick: "waitingToPick",
+            waitingToPlace: "waitingToPlace"
         };
         var counter, state;
         setInterval(function () {
@@ -36,6 +38,7 @@ function socketInit(io) {
             console.log("state: " + state);
             switch (state) {
                 case states.waiting:
+                case states.waitingToPick:
                     if (!data.boardIsSettled()) {
                         state = states.picking;
                         resetCounter();
@@ -50,6 +53,12 @@ function socketInit(io) {
                     }
                     else {
                         incrementCounter();
+                    }
+                    break;
+                case states.waitingToPlace:
+                    if (!data.boardIsSettled()) {
+                        state = states.placing;
+                        resetCounter();
                     }
                     break;
                 case states.placing:
