@@ -61,7 +61,7 @@ export function socketInit(io: SocketIO.Server) {
       // console.log(timestamp + ": " + data.getBoardBitMapString());
       // console.log("settled: " + data.boardIsSettled());
       // console.log("state: " + state);
-      
+      console.log("Enterring state logic.");
       switch (data.board.state) {
         // waiting is currently just a fall through state. This soulbe disabled when not sampling for moves.
         case data.states.waiting:

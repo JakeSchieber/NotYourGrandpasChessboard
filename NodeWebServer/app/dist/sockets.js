@@ -24,6 +24,7 @@ function socketInit(io) {
             if (!data.board.state) {
                 data.setState(data.states.waiting);
             }
+            console.log("Enterring state logic.");
             switch (data.board.state) {
                 case data.states.waiting:
                     if (data.boardIsSettled()) {
