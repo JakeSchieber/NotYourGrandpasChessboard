@@ -50,10 +50,9 @@ export function socketInit(io: SocketIO.Server) {
       picking: "picking",
       placing: "placing"
     }
-    var state = states.waiting;
-    var counter;
+    var state;
     setInterval(function() {
-      if(data.board.bitmap == []) {
+      if(data.board.numPrevBoardsToKeep > data.board.previousBoards.length) {
         // do nothing if the board has not been initted
         console.log("board not initted.");
         return;
@@ -65,7 +64,7 @@ export function socketInit(io: SocketIO.Server) {
       switch (state) {
         case states.waiting:
           // only to be used when it is not our turn...
-          if(!data.boardIsSettled()) {
+          if(data.boardIsSettled()) {
             state = states.picking;
           }
           break;

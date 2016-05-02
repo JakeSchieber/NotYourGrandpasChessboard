@@ -20,10 +20,9 @@ function socketInit(io) {
             picking: "picking",
             placing: "placing"
         };
-        var state = states.waiting;
-        var counter;
+        var state;
         setInterval(function () {
-            if (data.board.bitmap == []) {
+            if (data.board.numPrevBoardsToKeep > data.board.previousBoards.length) {
                 console.log("board not initted.");
                 return;
             }
@@ -33,7 +32,7 @@ function socketInit(io) {
             }
             switch (state) {
                 case states.waiting:
-                    if (!data.boardIsSettled()) {
+                    if (data.boardIsSettled()) {
                         state = states.picking;
                     }
                     break;
