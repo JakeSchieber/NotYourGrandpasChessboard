@@ -54,7 +54,7 @@ export function socketInit(io: SocketIO.Server) {
       }
       if(!data.board.state) {
         data.setState(data.states.waiting);
-        resetCounter();
+        data.resetCounter();
       }
       
       // var timestamp = new Date().getTime();
@@ -73,74 +73,36 @@ export function socketInit(io: SocketIO.Server) {
           // Start couning when the board gets messed with.
           if(!data.boardIsSettled()) {
             data.setState(data.states.picking);
-            resetCounter();
+            data.resetCounter();
           }
           break;
         case data.states.picking:
           if(data.boardIsSettled()) {
             console.log("Pieve pick up action.");
-            console.log("col,row: " + getMax());
+            console.log("col,row: " + data.getCounterMax());
             // resetCounter();
             data.setState(data.states.waitingToPlace);
           } else {
-            incrementCounter();
+            data.incrementCounter();
           }
           break;
         case data.states.waitingToPlace:
           if(!data.boardIsSettled()) {
             data.setState(data.states.placing);
-            resetCounter();
+            data.resetCounter();
           }
           break;
         case data.states.placing:
           if(data.boardIsSettled()) {
             console.log("Piece set down action.");
-            console.log("col,row: " + getMax());
+            console.log("col,row: " + data.getCounterMax());
             // resetCounter();
             data.setState(data.states.waiting);
           } else {
-            incrementCounter();
+            data.incrementCounter();
           }
       }
     }, 1000);
-    function resetCounter() {
-      counter = [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0]
-      ]
-    }
-    function incrementCounter() {
-      console.log(counter);
-      for(var i = 0; i < data.board.bitmap.length; i++) {
-        for(var x = 0; x < 8; x++) {
-          if((data.board.bitmap[i] >> x) & 1) {
-            // need to do 7 - x to invert the msb into position 0.
-            counter[i][7 - x]++;
-          }
-        }
-      }
-    }
-    /**
-     * Returns the most polled space in the counter.
-     */
-    function getMax() {
-      var maxRow, maxCol, maxVal;
-      for(var i = 0; i < 8; i++) {
-        for(var x = 0; x < 8; x++) {
-          if(!maxVal || counter[maxRow][maxCol] < counter[i][x]) {
-            maxRow = i;
-            maxCol = x;
-          }
-        }
-      }
-      return maxCol + '' + maxRow;
-    }
     
     // create a new user, this will default their game.
     var user = new User();

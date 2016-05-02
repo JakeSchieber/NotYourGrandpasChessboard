@@ -32,7 +32,8 @@ export var board = {
   reset: false, // goes high when the board triggers a reset to the server.
   gameState: gameState.uninitialized,
   postMockBoardMoves: false, // if true then both game and mockboard moves posted to handleMove
-  state: null
+  state: null,
+  counter: null
 };
 
 /**
@@ -287,4 +288,47 @@ export function moveToMoveString(move) {
   // return start.col + '' + start.row + "-" + end.col + '' + end.row;
   return start.row + '' + start.col + "-" + end.row + '' + end.col + '-' + captured + color;
   // SAM HACK
+}
+
+
+/**
+ * This is stupid
+ */
+export function resetCounter() {
+  board.counter = [
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0]
+  ];
+}
+export function incrementCounter() {
+  console.log(board.counter);
+  for(var i = 0; i < board.bitmap.length; i++) {
+    for(var x = 0; x < 8; x++) {
+      if((board.bitmap[i] >> x) & 1) {
+        // need to do 7 - x to invert the msb into position 0.
+        board.counter[i][7 - x]++;
+      }
+    }
+  }
+}
+/**
+ * Returns the most polled space in the counter.
+ */
+export function getCounterMax() {
+  var maxRow, maxCol, maxVal;
+  for(var i = 0; i < 8; i++) {
+    for(var x = 0; x < 8; x++) {
+      if(!maxVal || board.counter[maxRow][maxCol] < board.counter[i][x]) {
+        maxRow = i;
+        maxCol = x;
+      }
+    }
+  }
+  return maxCol + '' + maxRow;
 }

@@ -16,7 +16,8 @@ exports.board = {
     reset: false,
     gameState: gameState.uninitialized,
     postMockBoardMoves: false,
-    state: null
+    state: null,
+    counter: null
 };
 exports.states = {
     waiting: "waiting",
@@ -187,3 +188,40 @@ function moveToMoveString(move) {
     return start.row + '' + start.col + "-" + end.row + '' + end.col + '-' + captured + color;
 }
 exports.moveToMoveString = moveToMoveString;
+function resetCounter() {
+    exports.board.counter = [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
+    ];
+}
+exports.resetCounter = resetCounter;
+function incrementCounter() {
+    console.log(exports.board.counter);
+    for (var i = 0; i < exports.board.bitmap.length; i++) {
+        for (var x = 0; x < 8; x++) {
+            if ((exports.board.bitmap[i] >> x) & 1) {
+                exports.board.counter[i][7 - x]++;
+            }
+        }
+    }
+}
+exports.incrementCounter = incrementCounter;
+function getCounterMax() {
+    var maxRow, maxCol, maxVal;
+    for (var i = 0; i < 8; i++) {
+        for (var x = 0; x < 8; x++) {
+            if (!maxVal || exports.board.counter[maxRow][maxCol] < exports.board.counter[i][x]) {
+                maxRow = i;
+                maxCol = x;
+            }
+        }
+    }
+    return maxCol + '' + maxRow;
+}
+exports.getCounterMax = getCounterMax;
