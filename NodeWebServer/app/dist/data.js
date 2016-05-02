@@ -87,12 +87,21 @@ function getBoardBitMapString() {
     return exports.board.bitmap.join('-');
 }
 exports.getBoardBitMapString = getBoardBitMapString;
+var lastSnap;
+var constCount;
 function boardIsSettled() {
-    var hold = 0;
-    for (var i = 0; i < exports.board.bitmap.length; i++) {
-        hold = hold | exports.board.bitmap[i];
+    if (lastSnap) {
+        var notSettled = false;
+        for (var i = 0; i < lastSnap.length; i++) {
+            lastSnap[i] = lastSnap[i] ^ exports.board.bitmap[i];
+            if (lastSnap[i]) {
+                notSettled = true;
+            }
+        }
+        return !notSettled;
     }
-    return hold == 0;
+    lastSnap = exports.board.bitmap;
+    return false;
 }
 exports.boardIsSettled = boardIsSettled;
 function setReset(high) {
@@ -151,9 +160,3 @@ function moveToMoveString(move) {
     return start.row + '' + start.col + "-" + end.row + '' + end.col + '-' + captured + color;
 }
 exports.moveToMoveString = moveToMoveString;
-var state = false;
-setInterval(function () {
-    var timestamp = new Date().getTime();
-    console.log(timestamp + ": " + getBoardBitMapString());
-    console.log(boardIsSettled());
-}, 1000);

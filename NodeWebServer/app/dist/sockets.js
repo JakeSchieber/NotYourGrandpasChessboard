@@ -15,6 +15,12 @@ function socketInit(io) {
                 bitMapString = data.getBoardBitMapString();
             }
         }, 100);
+        var state = false;
+        setInterval(function () {
+            var timestamp = new Date().getTime();
+            console.log(timestamp + ": " + data.getBoardBitMapString());
+            console.log(data.boardIsSettled());
+        }, 1000);
         var user = new User();
         socket.on('setToGameDemo', function () {
             console.log("setting to demo board");

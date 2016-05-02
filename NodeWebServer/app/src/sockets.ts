@@ -42,6 +42,17 @@ export function socketInit(io: SocketIO.Server) {
       }
     }, 100);
     
+    /**
+     * All board connection logic is going to go here for now...
+     */
+    var state = false;
+    setInterval(function() {
+      var timestamp = new Date().getTime();
+      console.log(timestamp + ": " + data.getBoardBitMapString());
+      console.log(data.boardIsSettled());
+    }, 1000);
+
+    
     // create a new user, this will default their game.
     var user = new User();
     

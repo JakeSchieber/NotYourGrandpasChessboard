@@ -152,13 +152,26 @@ export function getBoardBitMapString() {
 
 /**
  * returns whehter the current board bitmap is settled (all zeros)
+ * 
+ * NOTE: We are going to need more logic on top of this to actually be able to sample the
+ * piece count.
  */
+var lastSnap;
+var constCount;
 export function boardIsSettled() {
-  var hold = 0;
-  for(var i = 0; i < board.bitmap.length; i++) {
-    hold = hold | board.bitmap[i];
+  if(lastSnap) {
+    var notSettled = false;
+    for(var i = 0; i < lastSnap.length; i++) {
+      lastSnap[i] = lastSnap[i] ^ board.bitmap[i];
+      if(lastSnap[i]) {
+        notSettled = true;
+      }
+    }
+    return !notSettled;
   }
-  return hold == 0;
+  // init to lastest string.
+  lastSnap = board.bitmap;
+  return false;
 }
 /**
  * Set high by the game board, set low when handled by the game server.
@@ -232,14 +245,3 @@ export function moveToMoveString(move) {
   return start.row + '' + start.col + "-" + end.row + '' + end.col + '-' + captured + color;
   // SAM HACK
 }
-
-
-/**
- * All board connection logic is going to go here for now...
- */
-var state = false;
-setInterval(function() {
-  var timestamp = new Date().getTime();
-  console.log(timestamp + ": " + getBoardBitMapString());
-  console.log(boardIsSettled());
-}, 1000);
