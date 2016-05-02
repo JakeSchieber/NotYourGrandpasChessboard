@@ -32,8 +32,9 @@ function socketInit(io) {
             }
             switch (state) {
                 case states.waiting:
-                    if (data.boardIsSettled()) {
+                    if (!data.boardIsSettled()) {
                         state = states.picking;
+                        resetCounter();
                     }
                     break;
                 case states.picking:

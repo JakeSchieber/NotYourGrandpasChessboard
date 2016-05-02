@@ -63,9 +63,10 @@ export function socketInit(io: SocketIO.Server) {
       }
       switch (state) {
         case states.waiting:
-          // only to be used when it is not our turn...
-          if(data.boardIsSettled()) {
+          // Start couning when the board gets messed with.
+          if(!data.boardIsSettled()) {
             state = states.picking;
+            resetCounter();
           }
           break;
         case states.picking:
