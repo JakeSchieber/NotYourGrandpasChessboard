@@ -18,9 +18,9 @@ module.exports = function(app) {
     // console.log(timestamp + ": " + req.params.data);
     
     var timestamp = new Date().getTime();
-    //console.log(timestamp + ": " + data.getBoardBitMapString());
-    //console.log("settled: " + data.boardIsSuperSettled());
-    //console.log("state: " + data.board.state);
+    console.log(timestamp + ": " + data.getBoardBitMapString());
+    // console.log("settled: " + data.boardIsSuperSettled());
+    // console.log("state: " + data.board.state);
       
       
     // set the new board bitmap and console an error if not a success
