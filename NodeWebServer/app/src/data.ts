@@ -328,6 +328,8 @@ export function resetCounter() {
   ];
 }
 export function incrementCounter() {
+  console.log("looking at...");
+  console.log(board.bitmap);
   for(var i = 0; i < board.bitmap.length; i++) {
     for(var x = 0; x < 8; x++) {
       if((board.bitmap[i] >> x) & 1) {
