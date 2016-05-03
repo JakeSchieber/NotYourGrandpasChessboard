@@ -232,7 +232,7 @@ function getCounterMax() {
     for (var i = 0; i < 8; i++) {
         for (var x = 0; x < 8; x++) {
             console.log("is max less than current: " + maxVal + " and " + exports.board.counter[i][x] + " " + i + " " + x);
-            if (!maxRow || !maxCol || (exports.board.counter[maxRow][maxCol] < exports.board.counter[i][x])) {
+            if (exports.board.counter[maxRow][maxCol] < exports.board.counter[i][x]) {
                 console.log("i and x: " + i + " and " + x);
                 maxRow = i;
                 maxCol = x;
