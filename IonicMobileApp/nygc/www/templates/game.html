@@ -2,11 +2,11 @@
   <ion-content class="" style="background-color: #eee" scroll="false">
     
     <div style="padding: 15px 11px 15px 12px;">
-      <div ng-if="!boardInitted" style="margin: 0 0 20px 0;">
+      <div ng-if="!gameboardInitted" style="margin: 0 0 20px 0;">
         <h4><span class="label label-black">Loading...</span></h4>
       </div>
       
-      <div ng-if="boardInitted">
+      <div ng-if="gameboardInitted">
         <h2 ng-if="me == 'w'"><span class="label">Playing as White</span> <span class="label label-black" ng-click="switchSides()">Switch</span></h2>
         <h2 ng-if="me == 'b'"><span class="label">Playing as Black</span> <span class="label label-black" ng-click="switchSides()">Switch</span></h2>
       </div>

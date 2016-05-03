@@ -57,6 +57,9 @@ export function socketInit(io: SocketIO.Server) {
         data.resetCounter();
       }
       
+      socket.emit('test', { });
+      socket.broadcast.emit('test', { });
+      
       // var timestamp = new Date().getTime();
       // console.log(timestamp + ": " + data.getBoardBitMapString());
       // console.log("settled: " + data.boardIsSettled());
@@ -85,6 +88,7 @@ export function socketInit(io: SocketIO.Server) {
             console.log("col,row: " + loc);
             // sense of action on the board.
             socket.emit('bluetoothActionPoll', { loc: loc});
+            socket.broadcast.emit('bluetoothActionPoll', { loc: loc });
             // resetCounter();
             data.setState(data.states.waiting);
             // data.setState(data.states.waitingToPlace);

@@ -84,18 +84,6 @@ angular.module('nygc.controllers', ['ngCordovaBluetoothLE', 'ngCordova'])
 
 .controller('GameCtrl', function($scope, Socket, $ionicModal) {
   
-  /**
-   * Use this to poll the api for changes.
-   */
-  /*
-  (function pollForChanges() {
-    // here we nee
-    // how do we want to setup the polls here....
-    
-    $timeout(pollForChanges, 1000);
-  })();
-  */
-  
   var board,
   game = new Chess();
   
@@ -110,6 +98,19 @@ angular.module('nygc.controllers', ['ngCordovaBluetoothLE', 'ngCordova'])
     $scope.me = ($scope.me == $scope.colors[0]) ? $scope.colors[1] : $scope.colors[0];
     board.orientation(($scope.me == $scope.colors[0]) ? $scope.fullColors[0] : $scope.fullColors[1]);
   }
+  
+  /**
+   * Info modal used at the beginning of games.
+   */
+  $ionicModal.fromTemplateUrl('templates/modals/infoModal.html', function($ionicModal) {
+    $scope.infoModal = $ionicModal;
+  }, {
+    // Use our scope for the scope of the modal to keep it simple
+    scope: $scope,
+    // The animation we want to use for the modal entrance
+    animation: 'slide-in-up'
+  });
+  
   // request to restart the game.
   $scope.restartGame = function() {
     console.log("request issued to restart game.");
@@ -148,7 +149,10 @@ angular.module('nygc.controllers', ['ngCordovaBluetoothLE', 'ngCordova'])
       promotion: 'q' // NOTE: always promote to a queen for example simplicity
     }
     var move = game.move(moveRequest);
-  
+    if(isGameOver(false)) {
+      return;
+    }
+    
     // check for illegal move
     if (move === null) return 'snapback';
     // move was valid, push request to server.
@@ -158,14 +162,13 @@ angular.module('nygc.controllers', ['ngCordovaBluetoothLE', 'ngCordova'])
   var onSnapEnd = function() {
     board.position(game.fen());
   };
-
-  $scope.boardInitted = false;
-  // Send a board initialization request
-  Socket.emit("boardRequest", { });
-  // this will be caught by the initialization function below.
+  
+  Socket.emit('setToGameDemo', {});
+  $scope.gameboardInitted = false;
   Socket.on("boardInit", function (data) {
-		console.log("Board initialization");
-        
+		console.log("Game board initialization");
+    game = new Chess(data.boardFen);
+    
     var cfg = {
       draggable: true,
       onDragStart: onDragStart,
@@ -175,10 +178,16 @@ angular.module('nygc.controllers', ['ngCordovaBluetoothLE', 'ngCordova'])
       pieceTheme: 'lib/chessboard.js/dist/img/chesspieces/wikipedia/{piece}.png',
     };
     board = ChessBoard('demoboard', cfg);
-
-    $scope.boardInitted = true;
     handleBoardUpdate(data);
-	});
+    
+    $scope.$apply(function() {      
+      $scope.gameboardInitted = true;
+      console.log("the turn is: " + data.turn);
+      $scope.placing = data.turn;
+    });
+  });
+    
+  
   Socket.on('moveRejected', function(data) {
     // WARNING: On this condition: Whose turn is it?...
     alert('Oops, an error occurred. Your move was rejected from the server, your board will be reset to the current game state.');
@@ -186,6 +195,7 @@ angular.module('nygc.controllers', ['ngCordovaBluetoothLE', 'ngCordova'])
     handleBoardUpdate(data);
   });
   Socket.on("boardUpdate", function (data) {
+    console.log("request to update the board.");
     console.log(data);
     handleBoardUpdate(data);
 	});
@@ -220,7 +230,60 @@ angular.module('nygc.controllers', ['ngCordovaBluetoothLE', 'ngCordova'])
     $scope.$apply(function() {
       $scope.placing = gameUpdate.turn;
     });
+    
+    if(isGameOver(false)) {
+      return;
+    }
   }
   
+  // INFO MODAL FUNCTIONS
+  $scope.openInfoModal = function() {
+    
+    // sometimes the socket goes off before the page is finished initializing. If so wait until modal is created.
+    if(!$scope.infoModal || !$scope.infoModal.show) {
+      setTimeout(function(){
+        $scope.openInfoModal()
+      }, 10);
+      return;
+    }
+    
+    $scope.infoModal.show();
+  };
+  $scope.closeInfoModal = function() {
+    // THIS NEEDS TO BE UPDATED IF WE EVER CLOSE THE MODAL FROM ANYWHERE BUT FROM THE MODAL ITSELF
+    // this says that immediately when the info modal is closed that we should verify board position.
+    $scope.infoModal.hide();
+  };
+  // restart game request triggered from the info modal.
+  $scope.infoModalRestartGame = function() {
+    // WARNING: We are now waiting for the board and the server logic to merge here... if we trigger the restart
+    // @ what point will we next compare the boards with mockboard?...
+    // We might want to force the mockboard poll to 
+    
+    
+    // Restart
+    // Instead on reset we are going to force the user to reset the board by themselves.
+    // On game restart should we show the welcome message?....
+    
+    // Currently clicking reset on the app resets the mockboard... We do not want this. We want to trigger a board reset by user force.
+    $scope.gameOver = false;
+    $scope.win = false;
+        
+    $scope.closeInfoModal();
+    $scope.restartGame();
+  }
+  $scope.$on('$destroy', function() {
+    $scope.infoModal.remove();
+  });
+
+  function isGameOver(checkIsFromPlayer) {
+    if(game.game_over()) {
+      $scope.gameOver = true;
+      $scope.win = checkIsFromPlayer;
+      $scope.openInfoModal();
+      return true;
+    }
+    return false;
+  }
 })
 ;

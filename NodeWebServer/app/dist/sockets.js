@@ -24,6 +24,8 @@ function socketInit(io) {
                 data.setState(data.states.waiting);
                 data.resetCounter();
             }
+            socket.emit('test', {});
+            socket.broadcast.emit('test', {});
             switch (data.board.state) {
                 case data.states.waiting:
                     if (data.boardIsSuperSettled()) {
@@ -43,6 +45,7 @@ function socketInit(io) {
                         var loc = data.getCounterMax();
                         console.log("col,row: " + loc);
                         socket.emit('bluetoothActionPoll', { loc: loc });
+                        socket.broadcast.emit('bluetoothActionPoll', { loc: loc });
                         data.setState(data.states.waiting);
                     }
                     else {

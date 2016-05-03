@@ -144,6 +144,7 @@ angular.module('nygc.controllers')
   
   // THIS IS WHAT WE NEED TO CHANGE!!! WE NEED TO POLL NOT FROM THE MOCKBOARD,
   // BUT INSTEAD FROM BLUETOOTH
+  
   Socket.on("bluetoothActionPoll", function(data) {
     console.log("Poll received!");
     /*
@@ -680,7 +681,7 @@ angular.module('nygc.controllers')
     // sometimes the socket goes off before the page is finished initializing. If so wait until modal is created.
     if(!$scope.infoModal || !$scope.infoModal.show) {
       setTimeout(function(){
-        $scope.openModal()
+        $scope.openInfoModal()
       }, 10);
       return;
     }
