@@ -12,7 +12,6 @@ function socketInit(io) {
             if (bitMapString != data.getBoardBitMapString()) {
                 socket.emit('bluetoothPoll', { newData: data.board.bitmap });
                 bitMapString = data.getBoardBitMapString();
-                data.setState(data.states.waitingToPick);
             }
         }, 100);
         var counter;

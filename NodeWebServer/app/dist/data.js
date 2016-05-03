@@ -217,8 +217,6 @@ function resetCounter() {
 }
 exports.resetCounter = resetCounter;
 function incrementCounter() {
-    console.log("looking at...");
-    console.log(exports.board.bitmap);
     for (var i = 0; i < exports.board.bitmap.length; i++) {
         for (var x = 0; x < 8; x++) {
             if ((exports.board.bitmap[i] >> x) & 1) {
