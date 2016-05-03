@@ -342,10 +342,12 @@ export function incrementCounter() {
  */
 export function getCounterMax() {
   console.log(board.counter);
-  var maxRow = 0, maxCol = 0;
+  var maxRow = 0, maxCol = 0, maxVal = 0;
   for(var i = 0; i < 8; i++) {
     for(var x = 0; x < 8; x++) {
+      console.log("is max less than current: " + maxVal + " and " + board.counter[i][x] + " " + i + " " + x);
       if(!maxRow || !maxCol || (board.counter[maxRow][maxCol] < board.counter[i][x])) {
+        console.log("i and x: " + i + " and " + x);
         maxRow = i;
         maxCol = x;
       }
