@@ -57,9 +57,6 @@ export function socketInit(io: SocketIO.Server) {
         data.resetCounter();
       }
       
-      socket.emit('test', { });
-      socket.broadcast.emit('test', { });
-      
       // var timestamp = new Date().getTime();
       // console.log(timestamp + ": " + data.getBoardBitMapString());
       // console.log("settled: " + data.boardIsSettled());

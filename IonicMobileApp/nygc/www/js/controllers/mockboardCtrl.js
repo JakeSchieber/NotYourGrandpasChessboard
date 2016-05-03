@@ -147,6 +147,7 @@ angular.module('nygc.controllers')
   
   Socket.on("bluetoothActionPoll", function(data) {
     console.log("Poll received!");
+    console.log(data);
     /*
     $cordovaDialogs.confirm('Location Sensed, is this correct?', data.loc, ['OK','Nope'])
       .then(function(buttonIndex) {

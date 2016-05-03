@@ -24,8 +24,6 @@ function socketInit(io) {
                 data.setState(data.states.waiting);
                 data.resetCounter();
             }
-            socket.emit('test', {});
-            socket.broadcast.emit('test', {});
             switch (data.board.state) {
                 case data.states.waiting:
                     if (data.boardIsSuperSettled()) {
