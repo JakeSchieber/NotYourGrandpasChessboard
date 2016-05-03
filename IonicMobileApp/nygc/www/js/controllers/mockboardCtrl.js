@@ -11,7 +11,7 @@ angular.module('nygc.controllers')
   var board, boardFen, boardBitmap;
   $scope.colors = ['w', 'b'];
   $scope.fullColors = ['white', 'black'];
-  $scope.me = $scope.colors[0];
+  $scope.me = $scope.colors[1];
   
   /**
    * Alert modal used on user errors.
@@ -138,6 +138,53 @@ angular.module('nygc.controllers')
 	});
   
   /**
+   * this method is going to allow for us to force the sensing of a locaiton on the board and thus
+   * be able to test our moving logic without an active board connection.
+   */
+  $scope.forceLocationSense = function() {
+    $cordovaDialogs.prompt("Enter the piece location with format following: 'a1'", "Manual Entry", ['Submit', 'Cancel'], "")
+      .then(function(result) {
+        // accept A1 for a1
+        result.input1 = result.input1.toLowerCase();
+        if(result.buttonIndex == 1 && isValidLetterLocName(result.input1)) {
+          // success callback
+          console.log("move validated: " + result.input1);
+          processActionPoll(result.input1);
+        } else if(result.buttonIndex == 1){
+          // error callback
+            $cordovaDialogs.alert('Your location could not be parsed. Try your move again.', 'Oops', 'OK')
+            .then(function() {
+              // callback success
+            });
+        } else {
+          // conole.log("Huh Uh clicked");
+        }
+      });
+  }
+  
+  /**
+   * Handles the input from the socket and allows the user to enter the move automatically if necessary.
+   * Else allows the user to try again until the move works.
+   */
+  function validatePolledMove(numberLoc) {
+    var letterLoc = numberLocToLetterLoc(numberLoc);
+    $cordovaDialogs.confirm('Location Sensed, is this correct?', letterLoc, ['Accept', 'Enter Manually', 'Try Again'])
+      .then(function(buttonIndex) {
+        // no button = 0, 'OK' = 1, 'Cancel' = 2
+        console.log(buttonIndex);
+        if(buttonIndex == 1) {
+          // success callback
+          console.log("move validated: " + letterLoc);
+          processActionPoll(letterLoc);
+        } else if(buttonIndex == 2) {
+          $scope.forceLocationSense();
+        } else {
+          // conole.log("Nope clicked");
+        }
+      });
+  }
+  
+  /**
    * On controller load subscribe to the mockboard poll.
    */
   Socket.emit("subscribeToMockboardPoll", { });
@@ -146,36 +193,29 @@ angular.module('nygc.controllers')
   // BUT INSTEAD FROM BLUETOOTH
   
   Socket.on("bluetoothActionPoll", function(data) {
-    console.log("Poll received!");
+    console.log("bluetoothActionPoll received!");
     console.log(data);
-    /*
-    $cordovaDialogs.confirm('Location Sensed, is this correct?', data.loc, ['OK','Nope'])
-      .then(function(buttonIndex) {
-        // no button = 0, 'OK' = 1, 'Cancel' = 2
-        console.log(buttonIndex);
-        if(buttonIndex == 1) {
-          alert("Got it!");
-        }
-        
-        // var btnIndex = buttonIndex;
-      });
-    */
+    validatePolledMove(data.loc);
   });
   
   /**
    * Mockboard poll handler function
    */
+  // warning this is not going to stop the requiring of them to match...
+  var disableMockboardMoveAbility = true;
   Socket.on("mockboardPoll", function(data) {
-    if(boardFen != data.boardFen) {
-      console.log("A change from mockboard has occurred");
-      handleBoardUpdate(data, false, true);
-      
-      // need to call compare so that we can trigger the close action on resolved.
-      if($scope.compareBoardFlag) {
-        // no message needed since this will only cause the close modal action.
-        compareMockToGame();
+    //if(!disableMockboardPoll) {
+      if(boardFen != data.boardFen) {
+        console.log("A change from mockboard has occurred");
+        handleBoardUpdate(data, false, true && !disableMockboardMoveAbility);
+        
+        // need to call compare so that we can trigger the close action on resolved.
+        if($scope.compareBoardFlag) {
+          // no message needed since this will only cause the close modal action.
+          compareMockToGame();
+        }
       }
-    }
+    // }
   });
   
   // request game board and then catch it.
@@ -259,7 +299,7 @@ angular.module('nygc.controllers')
       // update the board on the screen.
       // NOTE: isReset flag sent inside of data now.
       console.log(data);
-      handleBoardUpdate(data,false, false);
+      handleBoardUpdate(data, false, false);
       
       // ISSUE MOVE UPDATE TO THE BOARD...
       
@@ -318,6 +358,73 @@ angular.module('nygc.controllers')
   }
   
   /**
+   * Manages the moveSequenceAr based upon polls from the board.
+   * Then processes a board update based upon an inferred move combintation
+   */
+  function processActionPoll(letterLoc) {
+    // if the first move in a sequence it cant be a down action, must pick a location that has a piece on it.
+    if(!$scope.activeChessGame.get(letterLoc) && (!$scope.moveSequenceAr || $scope.moveSequenceAr.length == 0)) {
+      console.log(letterLoc);
+      $cordovaDialogs.alert('The location that you specified is not recorded as having a piece on it...', 'Error', 'OK')
+        .then(function() {
+          // callback success
+        });
+      return;
+    }
+    var locs = $scope.moveSequenceAr.map(function(a) {
+      return a.location;
+    });
+    var move;
+    // if that space has already been involved in the sequence then the logic flips (pick up and a place)
+    if(locs.indexOf(letterLoc) >= 0) {
+      if(!$scope.activeChessGame.get(letterLoc)) {
+// WARNING: This is not currently supported yet
+        // if already in the list, but not on the original board, then the user placed and picked it back up.
+        move = [{
+          location: letterLoc,
+          action: "up"
+        }];
+      } else {
+        // already in the list, and started with a piece on it, this must be a down after a pickup at that location.
+        move = [{
+          location: letterLoc,
+          action: "down"
+        }];
+      }
+    } else {
+      if(!$scope.activeChessGame.get(letterLoc)) {
+        // not in list and no piece there before, this is a down action
+        move = [{
+          location: letterLoc,
+          action: "down"
+        }];
+      } else {
+        // not in list and a piece was there before, this is an up action
+        move = [{
+          location: letterLoc,
+          action: "up"
+        }];
+      }
+    }
+ // WARNING: We should have this force an update to the mockboard as well if a move is processed, that way the web panel
+ // is synchronous with the board.
+    console.log("attempting this shit");
+    // move inferred above
+    // boardFen is a global
+    // true as 3rd argument tells the function to update the boardbitmap global if a move is made.
+    handleMove(move, boardFen, true, true);
+    console.log({
+      boardFen: $scope.activeChessGame.fen(),
+      boardBitmap: boardBitmap // is up to date at this time.
+    });
+    Socket.emit("forceUpdateMockboard", {
+      boardFen: $scope.activeChessGame.fen(),
+      boardBitmap: boardBitmap
+    });
+    console.log($scope.moveSequenceAr);
+  }
+  
+  /**
    * Handles an update of the board and local scope.
    * Note: If this is triggered by a socket then you must place inside $rootsScope.$apply()
    * 
@@ -355,6 +462,7 @@ angular.module('nygc.controllers')
       console.log(gameUpdate);
       boardFen = gameUpdate.boardFen;
       boardBitmap = gameUpdate.boardBitmap;
+      console.log(boardBitmap);
     }
     
     if(gameUpdate.isReset) {
@@ -384,12 +492,7 @@ angular.module('nygc.controllers')
    */
   var lastKnownValidBoard;
   $scope.moveSequenceAr;
-  
-/*
-  BE ABLE TO HANDLE A SLIDING MOTION!!! Implement settling logic.
-*/
-
-  function handleMove(move, origBoardFen) {        
+  function handleMove(move, origBoardFen, updateBitmapAfterMove, bluetoothActionHack) {        
     // Init variables responsible for creating a move sequence if not yet initted
     if(!lastKnownValidBoard) {
       if($scope.moveSequenceAr && $scope.moveSequenceAr.length > 0) {
@@ -444,14 +547,19 @@ angular.module('nygc.controllers')
       attemptedMove = $scope.activeChessGame.move({ from: move[0].location, to: move[1].location });
       moveAttempted = true;
     } else if ($scope.moveSequenceAr.length == 0 && move.length == 1) {
-      // if we have not started a move sequence and if this is only one move in a sequence log the move and wait for the next
-      $scope.$apply(function() {
-        // POSSIBLE BUG: IF THE USER DROPS A PIECE DIRECTLY ON THE PIECE THAT THEY ARE TAKING THEN THIS CODE WILL BREAK 
-        
-        // just a piece picked up.
-        // NOTE: This is too hard to test against since the user may pick up first the piece which they are going to attack.
+      // for some reason bluetooth polls are getting digest errors, dont have time to debug.
+      if(!bluetoothActionHack) {
+        // if we have not started a move sequence and if this is only one move in a sequence log the move and wait for the next
+        $scope.$apply(function() {
+          // POSSIBLE BUG: IF THE USER DROPS A PIECE DIRECTLY ON THE PIECE THAT THEY ARE TAKING THEN THIS CODE WILL BREAK 
+          
+          // just a piece picked up.
+          // NOTE: This is too hard to test against since the user may pick up first the piece which they are going to attack.
+          $scope.moveSequenceAr.push(move[0].location);
+        });
+      } else {
         $scope.moveSequenceAr.push(move[0].location);
-      });
+      }
     } else if($scope.moveSequenceAr.length == 1 && move.length == 2) {
       /**
        * If we have already started a move sequence and if a complete move has been made.
@@ -481,22 +589,40 @@ angular.module('nygc.controllers')
        * USE CASE: User picks up the piece that they want to take and then picks up their own piece.
        * USE CASE: User picks up the piece that they want to move, then sets it down.
        */
-      $scope.$apply(function() {
+      // for some reason bluetooth polls are getting digest errors, dont have time to debug.
+      if(!bluetoothActionHack) {
+        $scope.$apply(function() {
+          if(move[0].action == "down" && move[0].location == $scope.moveSequenceAr[0]) {
+            // Returned a piece that the user just picked up.
+            console.log("piece returned.");
+            $scope.moveSequenceAr = [];
+            //return;
+          } else if(move[0].action == "down") {
+            // The user returned their piece to the board but at a new location. Completed a move
+            console.log("move sequence finished");
+            attemptedMove = $scope.activeChessGame.move({ from: $scope.moveSequenceAr[0], to: move[0].location });
+            moveAttempted = true;
+            //return;
+          } else {
+            // else another piece was picked up, continue the sequence
+            $scope.moveSequenceAr.push(move[0].location);
+          }
+        });
+      } else {
         if(move[0].action == "down" && move[0].location == $scope.moveSequenceAr[0]) {
           // Returned a piece that the user just picked up.
           console.log("piece returned.");
           $scope.moveSequenceAr = [];
-          return;
         } else if(move[0].action == "down") {
           // The user returned their piece to the board but at a new location. Completed a move
           console.log("move sequence finished");
           attemptedMove = $scope.activeChessGame.move({ from: $scope.moveSequenceAr[0], to: move[0].location });
           moveAttempted = true;
-          return;
+        } else {
+          // else another piece was picked up, continue the sequence
+          $scope.moveSequenceAr.push(move[0].location);
         }
-        // else another piece was picked up, continue the sequence
-        $scope.moveSequenceAr.push(move[0].location);
-      });
+      }
       // this will complete a move.
     } else if($scope.moveSequenceAr.length == 2 && move.length == 1) {
       /**
@@ -505,15 +631,23 @@ angular.module('nygc.controllers')
        * USE CASE: User picks up their piece and the piece that they want to take, then places their
        * own piece onto the piece of the boad which they are "taking"
        */
-      $scope.$apply(function() {
+      // for some reason bluetooth polls are getting digest errors, dont have time to debug.
+      if(!bluetoothActionHack) {
+        $scope.$apply(function() {
+          var inferredMove = getValidMove($scope.moveSequenceAr[0], $scope.moveSequenceAr[1]);
+          console.log(inferredMove);
+          attemptedMove = $scope.activeChessGame.move({ from: inferredMove.move.from, to: inferredMove.move.to });
+          moveAttempted = true;
+          
+          // Note: you will get repeater error if you push to sequence again.
+          // $scope.moveSequenceAr.push(move[0].location);
+        });
+      } else {
         var inferredMove = getValidMove($scope.moveSequenceAr[0], $scope.moveSequenceAr[1]);
         console.log(inferredMove);
         attemptedMove = $scope.activeChessGame.move({ from: inferredMove.move.from, to: inferredMove.move.to });
         moveAttempted = true;
-        
-        // Note: you will get repeater error if you push to sequence again.
-        // $scope.moveSequenceAr.push(move[0].location);
-      });
+      }
       // this will complete a move.
     } else {
       console.log("Oops, the requested move does not work with the current sequence... How would you like to proceed?");
@@ -548,13 +682,27 @@ angular.module('nygc.controllers')
       // NOTE: this wont work when we start doing complex moves: We need to submit the whole movie.
       appendToMoveList({ from: attemptedMove.from, to: attemptedMove.to });
       
-      $scope.$apply(function() {
+      if(updateBitmapAfterMove) {
+        console.log("attempting to updated the board bitmap.");
+        boardBitmap = updateBitmapFromMove(boardBitmap, attemptedMove);
+      }
+      
+      // hacky shit
+      if(!bluetoothActionHack) {
+        $scope.$apply(function() {
+          $scope.switchTurns();
+          if(isGameOver(true)) {
+            // if game is over then we are done.
+            return;
+          }
+        });
+      } else {
         $scope.switchTurns();
         if(isGameOver(true)) {
           // if game is over then we are done.
           return;
         }
-      });
+      }
     }
   }
   
@@ -566,8 +714,6 @@ angular.module('nygc.controllers')
    * NOTE: Relies on the scoped active chess board.
    */
   function isGameOver(checkIsFromPlayer) {
-    console.log("test");
-    console.log(checkIsFromPlayer);
     if($scope.activeChessGame.game_over()) {
       $scope.gameOver = true;
       $scope.win = checkIsFromPlayer;
@@ -955,4 +1101,60 @@ function printBoard(boardAr) {
   for(var i=7; i >= 0; i--) {
     console.log(bitRep(boardAr[i]));
   }
+}
+
+/**
+ * Takes in a 1-based number number location combination and creates a letter based location
+ * 
+ * NOTE: This should have an option for 0-index as well, but the api is using 1-based atm
+ */
+function numberLocToLetterLoc(loc) {
+  if(loc.length != 2) {
+    return "xx";
+  }
+  var col;
+  switch(loc.charAt(0)) { // input is a 2 character string containing numbers
+    case '1':
+      col = 'a';
+      break;
+    case '2':
+      col = 'b';
+      break;
+    case '3':
+      col = 'c';
+      break;
+    case '4':
+      col = 'd';
+      break;
+    case '5':
+      col = 'e';
+      break;
+    case '6':
+      col = 'f';
+      break;
+    case '7':
+      col = 'g';
+      break;
+    case '8':
+      col = 'h';
+  }
+  return col + loc.charAt(1);
+}
+
+/**
+ * validates whether a loc is a valid letter location name
+ * WARNING: accepts only a lower case letter as the letter part of the location
+ */
+function isValidLetterLocName(loc) {
+  if(loc.length != 2) {
+    return false;
+  }
+  if(loc.charAt(0) < 'a' || loc.charAt(0) > 'h') {
+    return false;
+  }
+  var row = parseInt(loc.charAt(1));
+  if(row < 1 || row > 8) {
+    return false;
+  }
+  return true;
 }
