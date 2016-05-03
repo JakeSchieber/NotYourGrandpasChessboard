@@ -81,7 +81,10 @@ export function socketInit(io: SocketIO.Server) {
         case data.states.picking:
           if(data.boardIsSuperSettled()) {
             console.log("Piece  action.");
-            console.log("col,row: " + data.getCounterMax());
+            var loc = data.getCounterMax();
+            console.log("col,row: " + loc);
+            // sense of action on the board.
+            socket.emit('bluetoothActionPoll', { loc: loc});
             // resetCounter();
             data.setState(data.states.waiting);
             // data.setState(data.states.waitingToPlace);

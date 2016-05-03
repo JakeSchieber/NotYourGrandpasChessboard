@@ -142,6 +142,13 @@ angular.module('nygc.controllers')
    */
   Socket.emit("subscribeToMockboardPoll", { });
   
+  // THIS IS WHAT WE NEED TO CHANGE!!! WE NEED TO POLL NOT FROM THE MOCKBOARD,
+  // BUT INSTEAD FROM BLUETOOTH
+  Socket.on("bluetoothActionPoll", function(data) {
+    console.log(data);
+    alert(data.loc); 
+  });
+  
   /**
    * Mockboard poll handler function
    */
