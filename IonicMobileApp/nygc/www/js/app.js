@@ -66,15 +66,6 @@ angular.module('nygc', ['ionic', 'nygc.controllers', 'nygc.services'])
           controller: 'ConCtrl'
         }
       }
-    })
-    .state('nygc.boardCntrl', {
-      url: '/boardController',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/boardCntrl.html',
-          controller: 'BoardCntrlCtrl'
-        }
-      }
     });
     
   // if none of the above states are matched, fallback to home

@@ -80,7 +80,7 @@ export function socketInit(io: SocketIO.Server) {
           break;
         case data.states.picking:
           if(data.boardIsSuperSettled()) {
-            console.log("Piece  action.");
+            console.log("Piece action.");
             var loc = data.getCounterMax();
             console.log("col,row: " + loc);
             // sense of action on the board.

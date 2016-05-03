@@ -4,7 +4,7 @@ angular.module('nygc.controllers')
  * TODO: You can move pieces when its not your turn without reprecussion.
  */
 
-.controller('MockBoardCtrl', function($scope, Socket, $ionicModal) {
+.controller('MockBoardCtrl', function($scope, Socket, $ionicModal, $cordovaDialogs) {
   /**
    * Scoped game variables
    */
@@ -145,8 +145,19 @@ angular.module('nygc.controllers')
   // THIS IS WHAT WE NEED TO CHANGE!!! WE NEED TO POLL NOT FROM THE MOCKBOARD,
   // BUT INSTEAD FROM BLUETOOTH
   Socket.on("bluetoothActionPoll", function(data) {
-    console.log(data);
-    alert(data.loc); 
+    console.log("Poll received!");
+    /*
+    $cordovaDialogs.confirm('Location Sensed, is this correct?', data.loc, ['OK','Nope'])
+      .then(function(buttonIndex) {
+        // no button = 0, 'OK' = 1, 'Cancel' = 2
+        console.log(buttonIndex);
+        if(buttonIndex == 1) {
+          alert("Got it!");
+        }
+        
+        // var btnIndex = buttonIndex;
+      });
+    */
   });
   
   /**

@@ -1,4 +1,4 @@
-angular.module('nygc.controllers', ['ngCordovaBluetoothLE'])
+angular.module('nygc.controllers', ['ngCordovaBluetoothLE', 'ngCordova'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout) {
 
@@ -6,16 +6,6 @@ angular.module('nygc.controllers', ['ngCordovaBluetoothLE'])
 
 .controller('HomeCtrl', function($scope) {
 
-})
-
-/**
- * Allows for the app to make direct requests to the board
- * Overrides the game logic.
- * 
- * WARNING: This will wipe the current move in the game, 
- */
-.controller('BoardCntrlCtrl', function($scope) {
-  
 })
 
 /**
