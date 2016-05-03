@@ -39,6 +39,7 @@ export function socketInit(io: SocketIO.Server) {
         // console.log("The value has changed!!!!");
         socket.emit('bluetoothPoll', { newData: data.board.bitmap});
         bitMapString = data.getBoardBitMapString();
+        data.setState(data.states.waitingToPick);
       }
     }, 100);
     
