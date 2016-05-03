@@ -236,6 +236,7 @@ function getCounterMax() {
                 console.log("i and x: " + i + " and " + x);
                 maxRow = i;
                 maxCol = x;
+                maxVal = exports.board.counter[i][x];
             }
         }
     }

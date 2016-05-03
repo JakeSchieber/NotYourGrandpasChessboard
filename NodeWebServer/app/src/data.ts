@@ -350,6 +350,7 @@ export function getCounterMax() {
         console.log("i and x: " + i + " and " + x);
         maxRow = i;
         maxCol = x;
+        maxVal = board.counter[i][x];
       }
     }
   }
