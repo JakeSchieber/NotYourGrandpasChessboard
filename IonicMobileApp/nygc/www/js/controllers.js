@@ -156,7 +156,7 @@ angular.module('nygc.controllers', ['ngCordovaBluetoothLE', 'ngCordova'])
     // check for illegal move
     if (move === null) return 'snapback';
     // move was valid, push request to server.
-    Socket.emit("moveRequest", { move: moveRequest });
+    Socket.emit("moveRequest", { move: moveRequest, forceMoveMotor: true });
   };
 
   var onSnapEnd = function() {

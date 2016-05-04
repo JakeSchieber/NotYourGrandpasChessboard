@@ -13,7 +13,7 @@ angular.module('controllers')
     /*
       This restriction has been made so that the board does not have to poll while it attempts to set into starting position.
     */
-    alert("The ability to play as white has temporarily been restricted to the mockboard. If you would like to make a move as white change the url from /game to /mockboard");
+    // alert("The ability to play as white has temporarily been restricted to the mockboard. If you would like to make a move as white change the url from /game to /mockboard");
     //return;
     
     // swaps orientation and who is moving. Game logic handles controlling which pieces can be moved, no update to game required.
