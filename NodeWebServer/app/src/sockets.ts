@@ -352,6 +352,7 @@ class Board {
       return;
     }
     mockboardFen = new Chess().fen();
+    mockboardBitmap =  [255, 255, 0, 0, 0, 0, 255, 255];
   }
 }
 

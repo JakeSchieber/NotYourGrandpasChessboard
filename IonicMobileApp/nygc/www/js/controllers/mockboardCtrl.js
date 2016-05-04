@@ -204,7 +204,7 @@ angular.module('nygc.controllers')
   // warning this is not going to stop the requiring of them to match...
   var disableMockboardMoveAbility = true;
   Socket.on("mockboardPoll", function(data) {
-    //if(!disableMockboardPoll) {
+    if(!disableMockboardMoveAbility) { // would love to turn this back on.
       if(boardFen != data.boardFen) {
         console.log("A change from mockboard has occurred");
         handleBoardUpdate(data, false, true && !disableMockboardMoveAbility);
@@ -215,7 +215,7 @@ angular.module('nygc.controllers')
           compareMockToGame();
         }
       }
-    // }
+     }
   });
   
   // request game board and then catch it.
@@ -455,6 +455,9 @@ angular.module('nygc.controllers')
         boardBitmap = gameUpdate.boardBitmap;
       } else {
         console.log("update the boardbitmap");
+        console.log(gameUpdate);
+        console.log(boardBitmap);
+        console.log(move);
         boardBitmap = updateBitmapFromMove(boardBitmap, gameUpdate.move);
       }
     } else {      
@@ -462,6 +465,7 @@ angular.module('nygc.controllers')
       console.log(gameUpdate);
       boardFen = gameUpdate.boardFen;
       boardBitmap = gameUpdate.boardBitmap;
+      // warning this is nulll!
       console.log(boardBitmap);
     }
     
@@ -650,6 +654,7 @@ angular.module('nygc.controllers')
       }
       // this will complete a move.
     } else {
+ // HMMM Does this work on the app? I dont think that it does.
       console.log("Oops, the requested move does not work with the current sequence... How would you like to proceed?");
       console.log(move);
       console.log($scope.moveSequenceAr);
@@ -1037,6 +1042,10 @@ function updateBitmapFromMove(boardBitmap, move) {
   // col A is MSB so we need to swizzle the bits and 0 index.
   var fromColShift = (8 - from.col);
   var toColShift = (8 - to.col);
+  console.log("starting.");
+  console.log(boardBitmap);
+  console.log(from);
+  console.log(to);
   // Verify that the starting location had a piece on it before.
   if((boardBitmap[from.row - 1] & (1 << fromColShift)) == 0) {
     console.log("Oops, the former boardbitmap did not have a piece situated on the from of the move.");
