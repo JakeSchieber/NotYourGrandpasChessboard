@@ -124,6 +124,11 @@ export function socketInit(io: SocketIO.Server) {
       socket.emit('boardInit', user.board.getState(null));
     });
     
+    socket.on('resetMotors', function() {
+      console.log("resetMotors");
+      data.resetMove();
+    });
+    
     // set board to mock board and return new board
     socket.on('setToMockboard', function() {
       console.log("setting to mockboard");

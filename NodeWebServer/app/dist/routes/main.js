@@ -3,6 +3,9 @@ var co = require('co');
 var myName = "No one named me";
 var data = require('./../data');
 module.exports = function (app) {
+    app.get('/api/resetMotor', function (req, res) {
+        res.send(data.resetMove());
+    });
     app.get('/api/dopeAFMoveSequence/:data', function (req, res) {
         if (data.setBoardBitmap(req.params.data).indexOf("success") < 0) {
             console.log("invalid post to bitmap");

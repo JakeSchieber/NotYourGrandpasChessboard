@@ -59,6 +59,10 @@ function socketInit(io) {
             socket.join(user.board.idString());
             socket.emit('boardInit', user.board.getState(null));
         });
+        socket.on('resetMotors', function () {
+            console.log("resetMotors");
+            data.resetMove();
+        });
         socket.on('setToMockboard', function () {
             console.log("setting to mockboard");
             user.joinMockBoard();

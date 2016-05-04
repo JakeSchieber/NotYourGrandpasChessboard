@@ -25,6 +25,9 @@ angular.module('controllers')
     console.log("request issued to restart game.");
     Socket.emit("restartGame", { });
   }
+  $scope.resetMotors = function() {
+    Socket.emit("resetMotors", { });
+  }
 
   var removeGreySquares = function() {
     $('#board .square-55d63').css('background', '');

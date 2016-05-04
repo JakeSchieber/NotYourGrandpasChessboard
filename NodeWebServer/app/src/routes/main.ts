@@ -8,6 +8,15 @@ var myName = "No one named me";
 import data = require('./../data');
 
 module.exports = function(app) {
+  
+  /**
+   * Signals a reset request from the board.
+   * When this goes high, the boward waits until confirmation of reset from the gameState APU 
+   */
+  app.get('/api/resetMotor', function(req, res) {
+    res.send(data.resetMove());
+  });
+  
   /**
    * Super sequence, get move and update board capsense readings
    * 
