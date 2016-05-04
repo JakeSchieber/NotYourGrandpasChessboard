@@ -458,7 +458,7 @@ angular.module('nygc.controllers')
         console.log(gameUpdate);
         console.log(boardBitmap);
         console.log(move);
-        boardBitmap = updateBitmapFromMove(boardBitmapgameUpdate.move);
+        boardBitmap = updateBitmapFromMove(boardBitmap, gameUpdate.move);
       }
     } else {      
       console.log("we are initting...");
@@ -689,7 +689,7 @@ angular.module('nygc.controllers')
       
       if(updateBitmapAfterMove) {
         console.log("attempting to updated the board bitmap.");
-        boardBitmap = updateBitmapFromMove(attemptedMove);
+        boardBitmap = updateBitmapFromMove(boardBitmap, attemptedMove);
       }
       
       // hacky shit
@@ -1037,15 +1037,17 @@ function getActivatedSpace(boardAr) {
  * NOTE: We do not perform move validation here, meaning 
  */
 function updateBitmapFromMove(boardBitmap, move) {
+  console.log("starting.");
+  console.log(boardBitmap);
+  console.log(from);
+  console.log(to);
+  
   var from = locationToColRowRep(move.from);
   var to = locationToColRowRep(move.to);
   // col A is MSB so we need to swizzle the bits and 0 index.
   var fromColShift = (8 - from.col);
   var toColShift = (8 - to.col);
-  console.log("starting.");
-  console.log(boardBitmap);
-  console.log(from);
-  console.log(to);
+  
   // Verify that the starting location had a piece on it before.
   if((boardBitmap[from.row - 1] & (1 << fromColShift)) == 0) {
     console.log("Oops, the former boardbitmap did not have a piece situated on the from of the move.");

@@ -17,8 +17,8 @@ module.exports = function(app) {
     //var timestamp = new Date().getTime();
     // console.log(timestamp + ": " + req.params.data);
     
-    var timestamp = new Date().getTime();
-    console.log(timestamp + ": " + data.getBoardBitMapString());
+    // var timestamp = new Date().getTime();
+    // console.log(timestamp + ": " + data.getBoardBitMapString());
     // console.log("settled: " + data.boardIsSuperSettled());
     // console.log("state: " + data.board.state);
       
