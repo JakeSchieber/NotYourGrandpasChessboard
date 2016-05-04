@@ -74,6 +74,7 @@ function socketInit(io) {
         socket.on('subscribeToMockboardPoll', function () {
             socket.join('mockboardPoll');
             console.log("user subscribed to mockboard poll");
+            console.log(mockboardBitmap);
             socket.emit('mockboardInit', getMockBoardPackage());
         });
         var mockboardPoll = function () {
@@ -200,6 +201,10 @@ class Board {
     }
 }
 function getMockBoardPackage() {
+    console.log({
+        boardFen: mockboardFen,
+        boardBitmap: mockboardBitmap
+    });
     return {
         boardFen: mockboardFen,
         boardBitmap: mockboardBitmap

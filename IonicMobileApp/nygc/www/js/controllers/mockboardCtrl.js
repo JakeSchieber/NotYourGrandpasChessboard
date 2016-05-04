@@ -458,7 +458,7 @@ angular.module('nygc.controllers')
         console.log(gameUpdate);
         console.log(boardBitmap);
         console.log(move);
-        boardBitmap = updateBitmapFromMove(boardBitmap, gameUpdate.move);
+        boardBitmap = updateBitmapFromMove(boardBitmapgameUpdate.move);
       }
     } else {      
       console.log("we are initting...");
@@ -689,7 +689,7 @@ angular.module('nygc.controllers')
       
       if(updateBitmapAfterMove) {
         console.log("attempting to updated the board bitmap.");
-        boardBitmap = updateBitmapFromMove(boardBitmap, attemptedMove);
+        boardBitmap = updateBitmapFromMove(attemptedMove);
       }
       
       // hacky shit
