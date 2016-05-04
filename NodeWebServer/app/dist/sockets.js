@@ -98,7 +98,7 @@ function socketInit(io) {
                 console.log("Move request accepted.");
                 socket.broadcast.to(user.board.idString()).emit('boardUpdate', user.board.getState(sData.move));
                 console.log(move);
-                if (move.color == 'w') {
+                if (move.color == 'w' || sData.forceMoveMotor) {
                     data.requestMove(data.moveToMoveString(move));
                 }
             }

@@ -184,7 +184,7 @@ export function socketInit(io: SocketIO.Server) {
         // NOTE: here we should be using the check on whether to post from board and mockboard
         // DISABLED CHECK
         console.log(move);
-        if(move.color ==  'w') {
+        if(move.color ==  'w' || sData.forceMoveMotor) {
           // now we need to check if the last move was a capture or not... 
           data.requestMove(data.moveToMoveString(move));
         }

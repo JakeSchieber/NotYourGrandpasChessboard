@@ -69,7 +69,7 @@ angular.module('nygc.controllers', ['ngCordovaBluetoothLE', 'ngCordova'])
       })
       .catch(function(err) {
         console.log("ERROR: unable to disconnect.");
-        console.log(err);
+        consioole.log(err);
       });
   }
   

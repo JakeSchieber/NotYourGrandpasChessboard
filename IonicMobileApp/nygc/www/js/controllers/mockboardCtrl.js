@@ -1039,11 +1039,13 @@ function getActivatedSpace(boardAr) {
 function updateBitmapFromMove(boardBitmap, move) {
   console.log("starting.");
   console.log(boardBitmap);
-  console.log(from);
-  console.log(to);
+  console.log(move);
   
   var from = locationToColRowRep(move.from);
   var to = locationToColRowRep(move.to);
+  console.log(from);
+  console.log(to);
+  
   // col A is MSB so we need to swizzle the bits and 0 index.
   var fromColShift = (8 - from.col);
   var toColShift = (8 - to.col);
